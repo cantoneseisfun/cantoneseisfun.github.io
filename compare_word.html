@@ -1,0 +1,605 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta name="x-poe-datastore-behavior" content="local_only"><meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline' 'unsafe-eval' data: blob: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://code.jquery.com https://unpkg.com https://d3js.org https://threejs.org https://cdn.plot.ly https://stackpath.bootstrapcdn.com https://maps.googleapis.com https://cdn.tailwindcss.com https://ajax.googleapis.com https://kit.fontawesome.com https://cdn.datatables.net https://maxcdn.bootstrapcdn.com https://code.highcharts.com https://tako-static-assets-production.s3.amazonaws.com https://www.youtube.com https://fonts.googleapis.com https://fonts.gstatic.com https://pfst.cf2.poecdn.net https://puc.poecdn.net https://i.imgur.com https://wikimedia.org https://*.icons8.com https://*.giphy.com https://picsum.photos https://images.unsplash.com; frame-src 'self' https://www.youtube.com https://trytako.com; child-src 'self'; manifest-src 'self'; worker-src 'self'; upgrade-insecure-requests; block-all-mixed-content;">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>常用口语 vs 书面语用字</title>
+    <style>
+        :root {
+            --primary: #00b894; /* 实验室绿 */
+            --primary-dark: #00a884;
+            --secondary: #0984e3; /* 科技蓝 */
+            --accent: #fdcb6e; /* 强调黄 */
+            --text-main: #2d3436;
+            --text-light: #636e72;
+            --bg-color: #f5f6fa;
+            --card-bg: #ffffff;
+            --sidebar-width: 260px;
+        }
+
+        body {
+            font-family: "PingFang SC", "Microsoft YaHei", "Helvetica Neue", sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* 顶部标题栏 */
+        header {
+            /* background: linear-gradient(135deg, var(--text-main), #000); */
+            background: linear-gradient(135deg, #14b8a6, #0ea5e9);
+            color: white;
+            padding: 0 2rem;
+            height: auto;
+            min-height: 60px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            z-index: 100;
+        }
+
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 60px;
+            width: 100%;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+
+        .badge {
+            font-size: 0.7rem;
+            background: var(--primary);
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-weight: normal;
+            text-transform: uppercase;
+        }
+
+        .intro-text {
+            font-size: 0.85rem;
+            opacity: 0.9;
+            padding-bottom: 10px;
+            font-weight: 300;
+            /* color: #dfe6e9; */
+            color: white;
+        }
+
+        /* 主布局 */
+        .layout {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        /* 侧边导航 */
+        aside {
+            width: var(--sidebar-width);
+            background: white;
+            border-right: 1px solid #e1e1e1;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .nav-header {
+            padding: 15px 20px;
+            font-size: 0.85rem;
+            color: var(--text-light);
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            background: #fafafa;
+        }
+
+        .category-btn {
+            padding: 16px 20px;
+            border: none;
+            background: none;
+            text-align: left;
+            cursor: pointer;
+            font-size: 0.95rem;
+            color: var(--text-main);
+            border-left: 4px solid transparent;
+            transition: all 0.2s;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .category-btn:hover {
+            background-color: #f8f9fa;
+            color: var(--primary);
+        }
+
+        .category-btn.active {
+            background-color: #e3fcf7;
+            border-left-color: var(--primary);
+            font-weight: bold;
+            color: var(--primary-dark);
+        }
+
+        /* 内容区域 */
+        main {
+            flex: 1;
+            padding: 20px 30px;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        /* 搜索框 */
+        .search-container {
+            position: sticky;
+            top: 0;
+            background: var(--bg-color);
+            padding-bottom: 20px;
+            z-index: 10;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 15px 20px;
+            border: 2px solid #dfe6e9;
+            border-radius: 10px;
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.3s, box-shadow 0.3s;
+            box-sizing: border-box;
+        }
+
+        .search-input:focus {
+            border-color: var(--secondary);
+            box-shadow: 0 4px 12px rgba(9, 132, 227, 0.1);
+        }
+
+        /* 卡片网格 */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            padding-bottom: 40px;
+        }
+
+        /* 单词卡片 */
+        .card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+            border: 1px solid #eee;
+            transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 20px rgba(0,0,0,0.08);
+            border-color: var(--primary);
+        }
+
+        .card:active {
+            transform: scale(0.98);
+        }
+
+        /* 大 Emoji 样式 */
+        .card-emoji {
+            font-size: 3.5rem;
+            text-align: center;
+            margin-bottom: 10px;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-6px); }
+            100% { transform: translateY(0px); }
+        }
+
+        /* 卡片内容排版 */
+        .card-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 8px;
+        }
+
+        .spoken-word {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--text-main);
+            line-height: 1.2;
+        }
+
+        .jyutping-tag {
+            font-family: 'Courier New', monospace;
+            background: #f1f2f6;
+            color: var(--text-light);
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 1.0rem;
+            font-weight: 600;
+        }
+
+        .written-label {
+            font-size: 0.75rem;
+            color: #b2bec3;
+            margin-bottom: 2px;
+        }
+
+        .written-word {
+            font-size: 1.1rem;
+            color: var(--secondary);
+            margin-bottom: 15px;
+            font-weight: 500;
+        }
+
+        .example-box {
+            background: #fffbf0;
+            border-left: 3px solid var(--accent);
+            padding: 10px;
+            font-size: 0.9rem;
+            color: #636e72;
+            line-height: 1.5;
+            border-radius: 0 4px 4px 0;
+            flex-grow: 1;
+        }
+
+        /* 播放图标 */
+        .play-icon {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 32px;
+            height: 32px;
+            background: var(--primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            opacity: 0;
+            transform: scale(0.8);
+            transition: all 0.2s;
+            z-index: 2;
+        }
+
+        .card:hover .play-icon {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        /* 播放动画 */
+        @keyframes pulse-green {
+            0% { box-shadow: 0 0 0 0 rgba(0, 184, 148, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(0, 184, 148, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(0, 184, 148, 0); }
+        }
+
+        .playing {
+            animation: pulse-green 1s infinite;
+            border-color: var(--primary) !important;
+        }
+
+        /* 移动端适配 */
+        @media (max-width: 768px) {
+            .layout {
+                flex-direction: column;
+            }
+            aside {
+                width: 100%;
+                height: 60px;
+                flex-direction: row;
+                overflow-x: auto;
+                border-bottom: 1px solid #e1e1e1;
+                border-right: none;
+                flex-shrink: 0;
+            }
+            .nav-header { display: none; }
+            .category-btn {
+                white-space: nowrap;
+                border-left: none;
+                border-bottom: 3px solid transparent;
+                padding: 0 20px;
+                display: flex;
+                align-items: center;
+            }
+            .category-btn.active {
+                background: none;
+                border-bottom-color: var(--primary);
+                border-left-color: transparent;
+            }
+            main {
+                padding: 15px;
+            }
+            .grid {
+                grid-template-columns: 1fr;
+            }
+            .intro-text {
+                display: none; /* 移动端隐藏副标题以节省空间 */
+            }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="header-top">
+        <h1>常用口语 vs 书面语用字</h1>
+        <div style="font-size: 0.8rem; opacity: 0.8; display: none; display: md-block;">点击卡片聆听发音</div>
+    </div>
+    <div class="intro-text">
+        点击卡片，听听这些有趣的声音，把它们当作音乐来欣赏吧！
+    </div>
+</header>
+
+<div class="layout">
+    <aside id="sidebar">
+        <div class="nav-header">分类目录</div>
+        <!-- 类别按钮将通过 JS 插入 -->
+    </aside>
+
+    <main>
+        <!-- 
+        <div class="search-container">
+            <input type="text" id="search-input" class="search-input" placeholder="🔍 搜索书面语、粤语或拼音...">
+        </div>
+        -->
+        <div id="grid" class="grid">
+            <!-- 卡片将通过 JS 插入 -->
+        </div>
+    </main>
+</div>
+
+<script>
+    // 数据源：整合了 compare_fun1.docx 和 fun1.html 的内容
+    const database = [
+        {
+            category: "入门",
+            items: [
+                { emoji: "🙏", written: "谢谢 / 麻烦了", spoken: "唔该", jyutping: "m4 goi1", example: "这是最万能的词！买东西、借过、求助都能用。发音像嘴巴闭着哼出来的声音。" },
+                { emoji: "👌", written: "完成了 / 解决了", spoken: "搞掂", jyutping: "gaau2 dim6", example: "听起来很有力气！当你完成一件小事，大声说「搞掂！」，心情会变好。" },
+                { emoji: "🤔", written: "犹豫不决", spoken: "心大心细", jyutping: "sam1 daai6 sam1 sai3", example: "一会儿心大，一会儿心小。形容拿不定主意的样子，是不是很形象？" },
+                { emoji: "🐢", written: "慢慢来 / 别急", spoken: "慢慢嚟", jyutping: "maan6 maan6 lai4", example: "这是给所有学习者的咒语。当你觉得焦虑时，对自己说这三个字。" },
+                { emoji: "🥰", written: "可爱 / 有趣", spoken: "得意", jyutping: "dak1 ji3", example: "在粤语里，「得意」不只是骄傲，更多时候是用来称赞小动物或小朋友很可爱。" },
+                { emoji: "🤷", written: "随便 / 都可以", spoken: "是但", jyutping: "si6 daan6", example: "最佛系的词汇。不想做决定的时候，这是最好的挡箭牌。" }
+            ]
+        },
+        {
+            category: "人地時",
+            items: [
+                { written: "他 / 她 / 它", spoken: "佢", jyutping: "keoi5", example: "我唔识佢 (我不认识他)" },
+                { written: "我们", spoken: "我哋", jyutping: "ngo5 dei6", example: "我哋去食饭 (我们去吃饭)" },
+                { written: "你们", spoken: "你哋", jyutping: "nei5 dei6", example: "你哋几点到？ (你们几点到？)" },
+                { written: "他们", spoken: "佢哋", jyutping: "keoi5 dei6", example: "佢哋系边个？ (他们是谁？)" },
+                { written: "谁", spoken: "边个", jyutping: "bin1 go3", example: "边个搵我？ (谁找我？)" },
+                { written: "哪里", spoken: "边度", jyutping: "bin1 dou6", example: "你去边度？ (你去哪里？)" },
+                { written: "这里", spoken: "呢度", jyutping: "ni1 dou6", example: "呢度有人坐 (这里有人坐)" },
+                { written: "那里", spoken: "嗰度", jyutping: "go2 dou6", example: "嗰度有间超市 (那里有家超市)" },
+                { written: "现在", spoken: "而家", jyutping: "ji4 gaa1", example: "而家几点？ (现在几点？)" },
+                { written: "今天", spoken: "今日", jyutping: "gam1 jat6", example: "今日天气好好 (今天天气很好)" },
+                { written: "明天", spoken: "听日", jyutping: "ting1 jat6", example: "听日见 (明天见)" },
+                { written: "昨天", spoken: "寻日", jyutping: "cam4 jat6", example: "寻日我去咗睇戏 (昨天我去了看电影)" }
+            ]
+        },
+        {
+            category: "动词",
+            items: [
+                { written: "是", spoken: "系", jyutping: "hai6", example: "佢系我朋友 (他是我的朋友)" },
+                { written: "在", spoken: "喺", jyutping: "hai2", example: "我喺屋企 (我在家里)" },
+                { written: "看", spoken: "睇", jyutping: "tai2", example: "睇电视 (看电视)" },
+                { written: "吃", spoken: "食", jyutping: "sik6", example: "食饭未？ (吃饭了吗？)" },
+                { written: "喝", spoken: "饮", jyutping: "jam2", example: "饮水 (喝水)" },
+                { written: "说 / 讲", spoken: "讲", jyutping: "gong2", example: "唔好讲大话 (不要说谎)" },
+                { written: "睡觉", spoken: "瞓觉", jyutping: "fan3 gaau3", example: "我要去瞓觉喇 (我要去睡觉了)" },
+                { written: "走 / 离开", spoken: "行 / 走", jyutping: "haang4 / zau2", example: "我行先喇 (我先走了)" },
+                { written: "给", spoken: "俾", jyutping: "bei2", example: "俾支笔我 (给我一支笔)" },
+                { written: "找", spoken: "搵", jyutping: "wan2", example: "我搵紧锁匙 (我正在找钥匙)" },
+                { written: "拿", spoken: "攞", jyutping: "lo2", example: "帮我攞杯水 (帮我拿杯水)" },
+                { written: "想", spoken: "谂 / 想", jyutping: "nam2 / soeng2", example: "我谂紧办法 (我正在想办法)" },
+                { written: "下车", spoken: "落车", jyutping: "lok6 ce1", example: "前面落车 (前面下车)" }
+            ]
+        },
+        {
+            category: "状态",
+            items: [
+                { written: "漂亮", spoken: "靓", jyutping: "leng3", example: "佢好靓女 (她很漂亮)" },
+                { written: "累", spoken: "攰", jyutping: "gui6", example: "我好攰 (我很累)" },
+                { written: "生气", spoken: "嬲", jyutping: "nau1", example: "唔好嬲啦 (别生气啦)" },
+                { written: "害怕", spoken: "惊", jyutping: "geng1", example: "我好惊老鼠 (我很怕老鼠)" },
+                { written: "疯", spoken: "癫", jyutping: "din1", example: "你系咪癫㗎？ (你是不是疯了？)" },
+                { written: "傻", spoken: "戆居 / 傻", jyutping: "ong6 geoi1 / so4", example: "做人唔好咁戆居 (做人不要这么傻)" },
+                { written: "厉害", spoken: "劲 / 犀利", jyutping: "ging6 / sai1 lei6", example: "你好劲啊！ (你很厉害啊！)" },
+                { written: "便宜", spoken: "平", jyutping: "peng4", example: "啲嘢好平 (东西很便宜)" },
+                { written: "冷", spoken: "冻", jyutping: "dung3", example: "今日好冻 (今天很冷)" },
+                { written: "一起", spoken: "一齐", jyutping: "jat1 cai4", example: "一齐食饭 (一起食饭)" }
+            ]
+        },
+        {
+            category: "连接词",
+            items: [
+                { written: "的", spoken: "嘅", jyutping: "ge3", example: "我嘅书 (我的书)" },
+                { written: "不", spoken: "唔", jyutping: "m4", example: "唔好 (不好/不要)" },
+                { written: "没有", spoken: "冇", jyutping: "mou5", example: "我冇钱 (我没有钱)" },
+                { written: "了", spoken: "咗", jyutping: "zo2", example: "食咗饭 (吃了饭)" },
+                { written: "正在", spoken: "紧", jyutping: "gan2", example: "食紧饭 (正在吃饭)" },
+                { written: "为什么", spoken: "点解", jyutping: "dim2 gaai2", example: "点解你会知？ (为什么你会知道？)" },
+                { written: "什么", spoken: "咩 / 乜嘢", jyutping: "me1 / mat1 je5", example: "你食咩？ (你吃什么？)" },
+                { written: "怎么", spoken: "点", jyutping: "dim2", example: "点做啊？ (怎么做啊？)" }
+            ]
+        },
+        {
+            category: "语气",
+            items: [
+                { written: "吗？真的吗？", spoken: "咩", jyutping: "me1", example: "你识佢咩？ (你认识他吗？暗示我不信你认识)" },
+                { written: "啊？", spoken: "呀", jyutping: "aa3", example: "边个嚟呀？ (是谁来啊？纯粹想知道)" },
+                { written: "呢？", spoken: "呢", jyutping: "ne1", example: "我本书呢？ (我的书呢？)" },
+                { written: "怎么...的？", spoken: "嘅", jyutping: "ge2", example: "点解会咁嘅？ (为什么会这样？觉得不合理)" },
+                { written: "的、是...的", spoken: "㗎", jyutping: "gaa3", example: "佢系老师嚟㗎。 (他是老师来的。强调他的身份)" },
+                { written: "嘛、呗", spoken: "啰", jyutping: "lo1", example: "落雨咪带遮啰。 (下雨就带伞啊。这还用问吗？)" },
+                { written: "了", spoken: "喇", jyutping: "laa1", example: "我食饱喇。 (我吃饱了。)" },
+                { written: "罢了", spoken: "罢", jyutping: "baa6", example: "算数罢啦。 (算了吧。放弃争辩)" },
+                { written: "吧", spoken: "啦", jyutping: "laa1", example: "你快啲啦！ (你快一点吧！)" },
+                { written: "一下", spoken: "下", jyutping: "haa5", example: "帮我睇下。 (帮我看一下。语气较随意)" },
+                { written: "吧 (温和)", spoken: "丫", jyutping: "aa1", example: "不如去睇戏丫？ (不如去看电影吧？征求意见)" },
+                { written: "喔！竟然...", spoken: "喎", jyutping: "wo3", example: "原来系你喎！ (原来是你喔！没想到)" },
+                { written: "而已、罢了", spoken: "啫", jyutping: "ze1", example: "十蚊啫，好平。 (十块钱而已，很便宜。)" },
+                { written: "而已", spoken: "之嘛", jyutping: "zi1 maa3", example: "讲笑之嘛。 (开玩笑而已。别认真)" },
+                { written: "每当", spoken: "亲", jyutping: "can1", example: "佢食亲海鲜都敏感。 (他每次吃海鲜都过敏。)" }
+            ]
+        }
+    ];
+
+    let currentCategoryIndex = 0;
+    const sidebar = document.getElementById('sidebar');
+    const grid = document.getElementById('grid');
+    const searchInput = document.getElementById('search-input');
+
+    // 初始化
+    function init() {
+        renderSidebar();
+        renderGrid(0);
+
+        // 搜索监听
+        searchInput.addEventListener('input', (e) => {
+            const term = e.target.value.toLowerCase().trim();
+            if (term.length > 0) {
+                // 搜索模式
+                const allItems = database.flatMap(cat => cat.items.map(item => ({...item, categoryName: cat.category})));
+                const results = allItems.filter(item => 
+                    item.written.toLowerCase().includes(term) || 
+                    item.spoken.toLowerCase().includes(term) || 
+                    item.jyutping.toLowerCase().includes(term)
+                );
+                renderSearchResults(results);
+                // 移除侧边栏激活状态
+                document.querySelectorAll('.category-btn').forEach(btn => btn.classList.remove('active'));
+            } else {
+                // 恢复分类模式
+                renderGrid(currentCategoryIndex);
+                const btns = document.querySelectorAll('.category-btn');
+                if(btns[currentCategoryIndex]) btns[currentCategoryIndex].classList.add('active');
+            }
+        });
+    }
+
+    // 渲染侧边栏
+    function renderSidebar() {
+        // 保留 header
+        const header = sidebar.querySelector('.nav-header');
+        sidebar.innerHTML = '';
+        if(header) sidebar.appendChild(header);
+
+        database.forEach((cat, index) => {
+            const btn = document.createElement('button');
+            btn.className = `category-btn ${index === 0 ? 'active' : ''}`;
+            btn.textContent = cat.category;
+            btn.onclick = () => {
+                currentCategoryIndex = index;
+                renderGrid(index);
+                searchInput.value = ''; // 清空搜索
+                
+                // 更新激活状态
+                document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+            };
+            sidebar.appendChild(btn);
+        });
+    }
+
+    // 渲染网格 (按分类)
+    function renderGrid(index) {
+        grid.innerHTML = '';
+        const items = database[index].items;
+        items.forEach(item => createCard(item));
+    }
+
+    // 渲染搜索结果
+    function renderSearchResults(items) {
+        grid.innerHTML = '';
+        if (items.length === 0) {
+            grid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; color: #999; padding: 40px;">找不到相关词汇 🧪</div>';
+            return;
+        }
+        items.forEach(item => createCard(item, true));
+    }
+
+    // 创建卡片元素
+    function createCard(item, showCategory = false) {
+        const card = document.createElement('div');
+        card.className = 'card';
+        
+        // 处理 TTS 文本 (如果有斜杠，只读第一个)
+        const ttsText = item.spoken.split('/')[0].trim();
+
+        card.onclick = () => {
+            speak(ttsText);
+            card.classList.add('playing');
+            setTimeout(() => card.classList.remove('playing'), 1000);
+        };
+
+        const categoryTag = showCategory ? `<div style="font-size:0.7rem; color:#aaa; margin-bottom:5px;">${item.categoryName}</div>` : '';
+        
+        // 渲染大 Emoji
+        const emojiHtml = item.emoji ? `<div class="card-emoji">${item.emoji}</div>` : '';
+
+        card.innerHTML = `
+            <div class="play-icon">🔊</div>
+            ${categoryTag}
+            ${emojiHtml}
+            <div class="card-top">
+                <div class="spoken-word">${item.spoken}</div>
+                <div class="jyutping-tag">${item.jyutping}</div>
+            </div>
+            <div class="written-word">${item.written}</div>
+            <div class="example-box">
+                ${item.example}
+            </div>
+        `;
+        grid.appendChild(card);
+    }
+
+    // 语音合成 (TTS)
+    function speak(text) {
+        if ('speechSynthesis' in window) {
+            window.speechSynthesis.cancel(); // 停止当前播放
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'zh-HK'; // 关键：设置为粤语 (香港)
+            utterance.rate = 0.9; // 稍微放慢语速
+            
+            // 尝试寻找最佳的粤语语音包
+            const voices = window.speechSynthesis.getVoices();
+            // 优先找包含 HK 或 Cantonese 的语音
+            const hkVoice = voices.find(v => v.lang === 'zh-HK' || v.name.includes('Cantonese') || v.name.includes('Hong Kong'));
+            if (hkVoice) utterance.voice = hkVoice;
+
+            window.speechSynthesis.speak(utterance);
+        } else {
+            alert("您的浏览器不支持语音合成功能。");
+        }
+    }
+
+    // 解决 Chrome 语音加载异步问题
+    window.speechSynthesis.onvoiceschanged = () => {};
+
+    // 启动
+    init();
+</script>
+
+
+
+</body></html>

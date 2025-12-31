@@ -1,0 +1,411 @@
+<!DOCTYPE html><html lang="zh-Hant"><head><meta name="x-poe-datastore-behavior" content="local_only"><meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline' 'unsafe-eval' data: blob: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://code.jquery.com https://unpkg.com https://d3js.org https://threejs.org https://cdn.plot.ly https://stackpath.bootstrapcdn.com https://maps.googleapis.com https://cdn.tailwindcss.com https://ajax.googleapis.com https://kit.fontawesome.com https://cdn.datatables.net https://maxcdn.bootstrapcdn.com https://code.highcharts.com https://tako-static-assets-production.s3.amazonaws.com https://www.youtube.com https://fonts.googleapis.com https://fonts.gstatic.com https://pfst.cf2.poecdn.net https://puc.poecdn.net https://i.imgur.com https://wikimedia.org https://*.icons8.com https://*.giphy.com https://picsum.photos https://images.unsplash.com; frame-src 'self' https://www.youtube.com https://trytako.com; child-src 'self'; manifest-src 'self'; worker-src 'self'; upgrade-insecure-requests; block-all-mixed-content;">
+    <meta charset="UTF-8">
+    <title>粵語繞口令</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        :root {
+            color-scheme: light dark;
+            --bg: #ffffff;
+            --fg: #111111;
+            --subtle-bg: #f5f5f5;
+            --border: #dddddd;
+            --accent: #0069d9;
+            --accent-hover: #0053aa;
+            --button-fg: #ffffff;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg: #060608;
+                --fg: #f5f5f5;
+                --subtle-bg: #15151b;
+                --border: #333640;
+                --accent: #4da3ff;
+                --accent-hover: #7bb8ff;
+                --button-fg: #020308;
+            }
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            font-size: 120%;
+        }
+
+        body {
+            margin: 0;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont,
+                "Segoe UI", sans-serif;
+            background-color: var(--bg);
+            color: var(--fg);
+            line-height: 1.6;
+        }
+
+        a {
+            color: var(--accent);
+        }
+
+        a:hover {
+            color: var(--accent-hover);
+        }
+
+        .page {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 1.25rem 1rem 2.5rem;
+        }
+
+        header {
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 0.75rem;
+        }
+
+        h1 {
+            font-size: 1.4rem;
+            margin: 0 0 0.2rem;
+        }
+
+        .subtitle {
+            font-size: 0.95rem;
+            opacity: 0.85;
+        }
+
+        .hint {
+            font-size: 0.9rem;
+            margin-top: 0.35rem;
+            opacity: 0.8;
+        }
+
+        .twister-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            margin-top: 1.5rem;
+        }
+
+        .twister-card {
+            border-radius: 0.5rem;
+            padding: 0.85rem 0.9rem;
+            background-color: var(--subtle-bg);
+            border: 1px solid var(--border);
+        }
+
+        .twister-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.75rem;
+            margin-bottom: 0.35rem;
+        }
+
+        .twister-index {
+            font-weight: 600;
+            font-size: 0.95rem;
+            white-space: nowrap;
+        }
+
+        button.play {
+            border-radius: 999px;
+            border: none;
+            padding: 0.25rem 0.9rem;
+            font-size: 0.9rem;
+            cursor: pointer;
+            background-color: var(--accent);
+            color: var(--button-fg);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+        }
+
+        button.play:hover {
+            background-color: var(--accent-hover);
+        }
+
+        button.play:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .twister-text {
+            margin-bottom: 0.2rem;
+            font-size: 0.98rem;
+        }
+
+        .twister-jyutping {
+            font-family: "SF Mono", ui-monospace, Menlo, Monaco, Consolas,
+                "Liberation Mono", "Courier New", monospace;
+            font-size: 0.85rem;
+            opacity: 0.9;
+            word-break: break-all;
+        }
+
+        footer {
+            margin-top: 1.75rem;
+            font-size: 0.8rem;
+            opacity: 0.8;
+        }
+
+        @media (min-width: 640px) {
+            .page {
+                padding-inline: 1.5rem;
+            }
+
+            h1 {
+                font-size: 1.6rem;
+            }
+
+            .twister-card {
+                padding-inline: 1.1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="page">
+    <header>
+        <h1>粵語繞口令</h1>
+        <!-- <div class="subtitle">粤语绕口令</div> -->
+        <p class="hint">
+            提示： 点「播放」朗读繞口令。希望您可以更有趣地学习粤语，不要感到有压力 :)
+        </p>
+    </header>
+
+    <main>
+        <section class="twister-list" id="twisterList">
+            <!-- 1 -->
+            <article class="twister-card">
+                <div class="twister-header">
+                    <span class="twister-index">1.</span>
+                    <button class="play" data-text="鸡龟骨滚羹。">
+                        播放
+                    </button>
+                </div>
+                <div class="twister-text">鸡龟骨滚羹。</div>
+                <div class="twister-jyutping">
+                    粵拼：gai1 gwai1 gwat1 gwan2 gang1.
+                </div>
+            </article>
+
+            <!-- 2 -->
+            <article class="twister-card">
+                <div class="twister-header">
+                    <span class="twister-index">2.</span>
+                    <button class="play" data-text="入实验室揿紧急掣。">
+                        播放
+                    </button>
+                </div>
+                <div class="twister-text">入实验室揿紧急掣。</div>
+                <div class="twister-jyutping">
+                    粵拼：jap6 sap6 jim6 sat1 gam2 gan2 gap1 zai3.
+                </div>
+            </article>
+
+            <!-- 3 -->
+            <article class="twister-card">
+                <div class="twister-header">
+                    <span class="twister-index">3.</span>
+                    <button class="play" data-text="各个国家有各个国家嘅国歌。">
+                        播放
+                    </button>
+                </div>
+                <div class="twister-text">各个国家有各个国家嘅国歌。</div>
+                <div class="twister-jyutping">
+                    粵拼：gok3 go3 gwok3 gaa1 jau5 gok3 go3 gwok3 gaa1 ge3 gwok3 go1.
+                </div>
+            </article>
+
+            <!-- 4 -->
+            <article class="twister-card">
+                <div class="twister-header">
+                    <span class="twister-index">4.</span>
+                    <button class="play" data-text="杨过喺刚果食各国嚟嘅干果。">
+                        播放
+                    </button>
+                </div>
+                <div class="twister-text">杨过喺刚果食各国嚟嘅干果。</div>
+                <div class="twister-jyutping">
+                    粵拼：joeng4 gwo3 hai2 gong1 gwo2 sik6 gok3 gwok3 lai4 ge3 gon1 gwo2.
+                </div>
+            </article>
+
+            <!-- 5 -->
+            <article class="twister-card">
+                <div class="twister-header">
+                    <span class="twister-index">5.</span>
+                    <button class="play" data-text="邮差叔叔送信纯熟迅速送出。">
+                        播放
+                    </button>
+                </div>
+                <div class="twister-text">邮差叔叔送信纯熟迅速送出。</div>
+                <div class="twister-jyutping">
+                    粵拼：jau4 caai1 suk1 suk1 sung3 seon3 seon4 suk6 seon3 cuk1 sung3 ceot1.
+                </div>
+            </article>
+
+            <!-- 6 -->
+            <article class="twister-card">
+                <div class="twister-header">
+                    <span class="twister-index">6.</span>
+                    <button class="play" data-text="黐线蜘蛛条蜘蛛丝黐住支树枝。">
+                        播放
+                    </button>
+                </div>
+                <div class="twister-text">黐线蜘蛛条蜘蛛丝黐住支树枝。</div>
+                <div class="twister-jyutping">
+                    粵拼：ci1 sin3 zi1 zyu1 tiu4 zi1 zyu1 si1 ci1 zyu6 zi1 syu6 zi1.
+                </div>
+            </article>
+
+            <!-- 7 -->
+            <article class="twister-card">
+                <div class="twister-header">
+                    <span class="twister-index">7.</span>
+                    <button class="play" data-text="一蚊一只鸡，七蚊一只龟，街头买斤鸡，街尾买斤龟。你话鸡贵过龟，我话龟贵过鸡，究竟系鸡贵过龟，定系龟贵过鸡？">
+                        播放
+                    </button>
+                </div>
+                <div class="twister-text">
+                    一蚊一只鸡，七蚊一只龟，街头买斤鸡，街尾买斤龟。你话鸡贵过龟，我话龟贵过鸡，究竟系鸡贵过龟，定系龟贵过鸡？
+                </div>
+                <div class="twister-jyutping">
+                    粵拼：jat1 man1 jat1 zek3 gai1, cat1 man1 jat1 zek3 gwai1, gaai1 tau4 maai5 gan1 gai1,
+                    gaai1 mei5 maai5 gan1 gwai1. nei5 waa6 gai1 gwai3 gwo3 gwai1, ngo5 waa6 gwai1 gwai3 gwo3 gai1,
+                    gau3 ging2 hai6 gai1 gwai3 gwo3 gwai1, ding6 hai6 gwai1 gwai3 gwo3 gai1?
+                </div>
+            </article>
+
+            <!-- 8 -->
+            <article class="twister-card">
+                <div class="twister-header">
+                    <span class="twister-index">8.</span>
+                    <button class="play" data-text="宜家学紧瑜伽嘅姨妈，而家去宜家家俬买而家啱用嘅宜家家俬。">
+                        播放
+                    </button>
+                </div>
+                <div class="twister-text">
+                    宜家学紧瑜伽嘅姨妈，而家去宜家家俬买而家啱用嘅宜家家俬。
+                </div>
+                <div class="twister-jyutping">
+                    粵拼：ji4 gaa1 hok6 gan2 jyu4 gaa1 ge3 ji4 maa1, ji4 gaa1 heoi3 ji4 gaa1 gaa1 si1 maai5
+                    ji4 gaa1 aam1 jung6 ge3 ji4 gaa1 gaa1 si1.
+                </div>
+            </article>
+
+            <!-- 9 -->
+            <article class="twister-card">
+                <div class="twister-header">
+                    <span class="twister-index">9.</span>
+                    <button class="play" data-text="床脚撞墙角，墙角撞床角，你话床角撞墙角定墙角撞床脚。">
+                        播放
+                    </button>
+                </div>
+                <div class="twister-text">
+                    床脚撞墙角，墙角撞床角，你话床角撞墙角定墙角撞床脚。
+                </div>
+                <div class="twister-jyutping">
+                    粵拼：cong4 goek3 zong6 coeng4 gok3, coeng4 gok3 zong6 cong4 gok3,
+                    nei5 waa6 cong4 gok3 zong6 coeng4 gok3 ding6 coeng4 gok3 zong6 cong4 goek3.
+                </div>
+            </article>
+
+            <!-- 10 -->
+            <article class="twister-card">
+                <div class="twister-header">
+                    <span class="twister-index">10.</span>
+                    <button class="play" data-text="掘柑掘桔掘金桔，掘鸡掘骨掘龟骨，掘完鸡骨掘金桔，掘完龟骨掘鸡骨。">
+                        播放
+                    </button>
+                </div>
+                <div class="twister-text">
+                    掘柑掘桔掘金桔，掘鸡掘骨掘龟骨，掘完鸡骨掘金桔，掘完龟骨掘鸡骨。
+                </div>
+                <div class="twister-jyutping">
+                    粵拼：gwat6 gam1 gwat6 gat1 gwat6 gam1 gat1, gwat6 gai1 gwat6 gwat1 gwat6 gwai1 gwat1,
+                    gwat6 jyun4 gai1 gwat1 gwat6 gam1 gat1, gwat6 jyun4 gwai1 gwat1 gwat6 gai1 gwat1.
+                </div>
+            </article>
+        </section>
+
+        <!--
+        <footer>
+            ※ 提示：語音朗讀係用瀏覽器內置語音合成功能。<br>
+            如瀏覽器支援粵語/廣東話語音，會自動優先選用；否則可能以普通話或其他語音播放，只供練習參考。
+        </footer>
+    -->
+    </main>
+</div>
+
+<script>
+    (function () {
+        const synth = window.speechSynthesis;
+        const buttons = document.querySelectorAll("button.play");
+
+        function pickCantoneseVoice(text) {
+            if (!synth) return null;
+            const voices = synth.getVoices();
+            if (!voices || voices.length === 0) return null;
+
+            const lower = text.toLowerCase();
+
+            const byLang = (v) => (v.lang || "").toLowerCase();
+            const byName = (v) => (v.name || "").toLowerCase();
+
+            let cand = voices.filter(v =>
+                /yue|zhyue|cantonese/.test(byLang(v)) ||
+                /粵語|廣東話|cantonese/.test(byName(v))
+            );
+            if (cand.length) return cand[0];
+
+            cand = voices.filter(v =>
+                /zh-hk|zh-mo|zh-yue/.test(byLang(v))
+            );
+            if (cand.length) return cand[0];
+
+            // fallback: any Chinese
+            cand = voices.filter(v => /^zh[-_]/i.test(v.lang));
+            if (cand.length) return cand[0];
+
+            // last resort: default voice
+            return voices[0] || null;
+        }
+
+        function speak(text, button) {
+            if (!synth) {
+                alert("呢個瀏覽器唔支援語音朗讀（Speech Synthesis）。");
+                return;
+            }
+
+            synth.cancel();
+
+            const utterance = new SpeechSynthesisUtterance(text);
+            const voice = pickCantoneseVoice(text);
+            if (voice) utterance.voice = voice;
+
+            button.disabled = true;
+            utterance.onend = utterance.onerror = function () {
+                button.disabled = false;
+            };
+
+            synth.speak(utterance);
+        }
+
+        buttons.forEach(btn => {
+            btn.addEventListener("click", () => {
+                const text = btn.getAttribute("data-text") || "";
+                speak(text, btn);
+            });
+        });
+
+        // 某些瀏覽器需要先調用 getVoices() 觸發載入
+        if (synth && typeof synth.getVoices === "function") {
+            synth.getVoices();
+            synth.onvoiceschanged = () => { /* 讓 pickCantoneseVoice 可以用最新 voices */ };
+        }
+    })();
+</script>
+
+
+</body></html>

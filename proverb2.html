@@ -1,0 +1,714 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta name="x-poe-datastore-behavior" content="local_only"><meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline' 'unsafe-eval' data: blob: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://code.jquery.com https://unpkg.com https://d3js.org https://threejs.org https://cdn.plot.ly https://stackpath.bootstrapcdn.com https://maps.googleapis.com https://cdn.tailwindcss.com https://ajax.googleapis.com https://kit.fontawesome.com https://cdn.datatables.net https://maxcdn.bootstrapcdn.com https://code.highcharts.com https://tako-static-assets-production.s3.amazonaws.com https://www.youtube.com https://fonts.googleapis.com https://fonts.gstatic.com https://pfst.cf2.poecdn.net https://puc.poecdn.net https://i.imgur.com https://wikimedia.org https://*.icons8.com https://*.giphy.com https://picsum.photos https://images.unsplash.com; frame-src 'self' https://www.youtube.com https://trytako.com; child-src 'self'; manifest-src 'self'; worker-src 'self'; upgrade-insecure-requests; block-all-mixed-content;">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <title>粵語俗语／俚语</title>
+  <style>
+    :root{
+      --bg:#ffffff;
+      --card:#f6f8ff;
+      --card2:#f3f5fb;
+      --border:#d9dff2;
+      --text:#101426;
+      --muted:#4b587a;
+      --accent:#2563eb;
+      --accent2:#7c3aed;
+      --ok:#16a34a;
+
+      --radius:18px;
+      --radius2:14px;
+      --shadow:0 10px 22px rgba(16,20,38,.08);
+      --ring:0 0 0 4px rgba(37,99,235,.18);
+
+      /* 较大字号（可读性优先） */
+      --fs-title:26px;
+      --fs-sub:16px;
+      --fs-body:18px;
+      --fs-phrase:24px;
+      --fs-meaning:20px;
+      --fs-example:18px;
+      --fs-chip:16px;
+      --fs-btn:17px;
+    }
+
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans SC", "PingFang SC",
+                   "Microsoft YaHei", Arial, sans-serif;
+      background:var(--bg);
+      color:var(--text);
+      line-height:1.6;
+    }
+
+    header{
+      max-width:1100px;
+      margin:0 auto;
+      padding:22px 16px 10px;
+    }
+
+    h1{
+      margin:0;
+      font-size:var(--fs-title);
+      font-weight:850;
+      letter-spacing:.2px;
+    }
+    .subtitle{
+      margin-top:8px;
+      font-size:var(--fs-sub);
+      color:var(--muted);
+    }
+
+    .toolbar{
+      margin-top:16px;
+      display:grid;
+      grid-template-columns:1fr;
+      gap:12px;
+    }
+
+    .panel{
+      background:linear-gradient(180deg, var(--card), var(--card2));
+      border:1px solid var(--border);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      padding:14px;
+    }
+
+    input[type="search"]{
+      width:100%;
+      padding:14px 14px;
+      border-radius:14px;
+      border:1px solid var(--border);
+      background:#fff;
+      color:var(--text);
+      font-size:var(--fs-body);
+      outline:none;
+      transition:.15s ease;
+    }
+    input[type="search"]:focus{
+      box-shadow:var(--ring);
+      border-color:rgba(37,99,235,.45);
+    }
+
+    .hint{
+      margin-top:10px;
+      font-size:15px;
+      color:var(--muted);
+    }
+
+    .chips{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+    }
+    .chip{
+      border:1px solid var(--border);
+      background:#fff;
+      color:var(--text);
+      border-radius:999px;
+      padding:10px 12px;
+      font-size:var(--fs-chip);
+      cursor:pointer;
+      user-select:none;
+      transition:.15s ease;
+    }
+    .chip[aria-pressed="true"]{
+      border-color:rgba(37,99,235,.55);
+      box-shadow:0 0 0 3px rgba(37,99,235,.12) inset;
+      background:rgba(37,99,235,.06);
+    }
+    .chip:focus{outline:none; box-shadow:var(--ring)}
+
+    main{
+      max-width:1100px;
+      margin:0 auto;
+      padding:10px 16px 30px;
+    }
+
+    details{
+      background:linear-gradient(180deg, var(--card), #fff);
+      border:1px solid var(--border);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      overflow:hidden;
+    }
+    summary{
+      list-style:none;
+      cursor:pointer;
+      padding:16px 14px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+    }
+    summary::-webkit-details-marker{display:none}
+
+    .cat-title{
+      font-size:20px;
+      font-weight:850;
+    }
+    .cat-meta{
+      margin-top:4px;
+      font-size:15px;
+      color:var(--muted);
+    }
+
+    .caret{
+      width:40px;height:40px;
+      border-radius:14px;
+      display:grid;place-items:center;
+      border:1px solid var(--border);
+      background:#fff;
+      transition:.15s ease;
+      flex:0 0 auto;
+      font-size:18px;
+      color:var(--muted);
+    }
+    details[open] .caret{ transform:rotate(180deg); }
+
+    .list{
+      padding:0 12px 12px;
+      display:grid;
+      gap:12px;
+    }
+
+    .item{
+      border:1px solid var(--border);
+      background:#fff;
+      border-radius:var(--radius2);
+      padding:14px;
+    }
+
+    .item-top{
+      display:flex;
+      gap:12px;
+      align-items:flex-start;
+      justify-content:space-between;
+      flex-wrap:wrap;
+    }
+
+    .phrase{
+      font-size:var(--fs-phrase);
+      font-weight:900;
+      letter-spacing:.3px;
+    }
+    .meaning{
+      margin-top:4px;
+      font-size:var(--fs-meaning);
+      color:var(--muted);
+    }
+
+    .btns{
+      display:flex;
+      gap:10px;
+      align-items:center;
+      flex-wrap:wrap;
+    }
+
+    button{
+      border:none;
+      cursor:pointer;
+      border-radius:14px;
+      padding:12px 14px;
+      font-size:var(--fs-btn);
+      font-weight:800;
+      letter-spacing:.2px;
+      transition:.15s ease;
+      outline:none;
+      background:rgba(37,99,235,.10);
+      color:#0b1b46;
+      border:1px solid rgba(37,99,235,.35);
+    }
+    button:hover{ filter:brightness(1.02); }
+    button:active{ transform:translateY(1px); }
+    button:focus{ box-shadow:var(--ring); }
+
+    .btn-ghost{
+      background:#fff;
+      border-color:var(--border);
+      color:var(--muted);
+      font-weight:800;
+    }
+
+    .example{
+      margin-top:12px;
+      border-left:4px solid rgba(22,163,74,.55);
+      padding:12px;
+      border-radius:14px;
+      background:rgba(22,163,74,.06);
+    }
+    .example .label{
+      font-size:15px;
+      color:rgba(22,163,74,.95);
+      font-weight:900;
+      letter-spacing:.2px;
+      margin-bottom:6px;
+    }
+    .example .text{
+      font-size:var(--fs-example);
+      color:var(--text);
+    }
+
+    .status{
+      margin-top:10px;
+      font-size:15px;
+      color:var(--muted);
+      display:flex;
+      gap:12px;
+      flex-wrap:wrap;
+      align-items:center;
+    }
+    .dot{
+      width:12px;height:12px;border-radius:999px;
+      background:#cbd5e1;
+      border:1px solid #cbd5e1;
+      display:inline-block;
+      margin-right:6px;
+      vertical-align:middle;
+    }
+    .dot.on{ background:#22c55e; border-color:#16a34a; }
+    .dot.warn{ background:#fbbf24; border-color:#f59e0b; }
+    .dot.bad{ background:#fb7185; border-color:#f43f5e; }
+
+    @media (min-width: 900px){
+      .toolbar{ grid-template-columns: 1.2fr .8fr; align-items:start; }
+    }
+
+    @media (prefers-reduced-motion: reduce){
+      *{transition:none !important}
+      button:active{transform:none}
+      details[open] .caret{transform:none}
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>粵語俗语／俚语</h1>
+    <!-- 
+    <div class="subtitle">
+      语音：只朗读“俗语”本身（不朗读解释/例子）｜尽量兼容华为浏览器（Web Speech API）。
+    </div>
+    -->
+    <div class="toolbar">
+      <div class="panel">
+        <input id="q" type="search" placeholder="搜索：例如“老细”“忙到”“落街”“有头威”…" autocomplete="off">
+        <!--
+        <div class="hint">
+          如果你的手机没有粤语语音，可能会读成普通话或无法发声：请在系统“文字转语音/语音输出”里添加或下载“粤语（香港）”语音。
+        </div>
+        <div class="status" id="ttsStatus">
+          <span><span class="dot" id="dotApi"></span>Web Speech API</span>
+          <span><span class="dot" id="dotYue"></span>粤语音色</span>
+          <span><span class="dot" id="dotSecure"></span>安全来源(HTTPS/本机)</span>
+        </div>
+        -->
+      </div>
+<br>
+      <div class="panel">
+        <div style="font-weight:900; font-size:18px; margin-bottom:10px;">分类筛选</div>
+        <div class="chips" id="chips"></div>
+        <div style="margin-top:12px; display:flex; gap:10px; flex-wrap:wrap;">
+          <button class="btn-ghost" id="expandAll" type="button">全部展开</button>
+          <button class="btn-ghost" id="collapseAll" type="button">全部收起</button>
+          <button class="btn-ghost" id="stopSpeak" type="button">停止语音</button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <div id="app" style="display:grid; gap:12px;"></div>
+  </main>
+
+  <script>
+    // 数据来自文档；例子为粤语口语示例句。
+    // 语音只播放 phrase（俗语），不播放 meaning/example。
+    const DATA = [
+      {
+        id: "work",
+        title: "1. 工作",
+        items: [
+          { phrase:"老细", meaning:"上司、Boss。", example:"我老细今日好忙到一头烟。"},
+          { phrase:"好夹", meaning:"合得来。", example:"同新同事都几好夹。"},
+          { phrase:"话头醒尾", meaning:"机灵，一点就通。", example:"你真系话头醒尾，一讲就明。"},
+          { phrase:"湿滞", meaning:"很麻烦、很棘手、难以处理。", example:"呢单嘢有啲湿滞，我要再睇清楚。"},
+          { phrase:"大镬", meaning:"事态严重。", example:"份资料唔见咗？咁就大镬喇。"},
+          { phrase:"孭镬", meaning:"背黑锅。", example:"我冇做错，唔好叫我孭镬。"},
+          { phrase:"揸流滩", meaning:"偷懒，做事马虎。", example:"你唔好揸流滩，按时交到先得。"},
+          { phrase:"捱夜", meaning:"熬夜。", example:"我寻晚捱夜赶报告。"},
+          { phrase:"冇符", meaning:"束手无策。", example:"客户临时改需求，我都真系冇符。"},
+          { phrase:"造马", meaning:"造假。", example:"数据唔可以造马，会出事。"},
+          { phrase:"搵食", meaning:"工作赚钱糊口。", example:"大家都系搵食，互相帮下啦。"},
+          { phrase:"忙到一头烟", meaning:"形容人非常忙。", example:"我今日忙到一头烟，连水都未饮。"},
+          { phrase:"忙到七彩", meaning:"忙得够呛。", example:"年尾结数真系忙到七彩。"},
+          { phrase:"有料", meaning:"有学问、实力。", example:"佢做嘢好有料，交俾佢放心。"},
+          { phrase:"一手一脚", meaning:"独自完成。", example:"呢个项目我一手一脚跟到尾。"},
+          { phrase:"跟手尾", meaning:"替人家完成未做完的工作。", example:"佢走咗，我要帮佢跟手尾。"},
+          { phrase:"做野冇手尾", meaning:"有头无尾/不收拾。", example:"你成日做野冇手尾，收拾返先。"},
+          { phrase:"两头唔到岸", meaning:"两头落空。", example:"又想快又想靓，最后两头唔到岸。"},
+          { phrase:"一镬泡", meaning:"事情搞糟了。", example:"改错咗版本，搞到一镬泡。"},
+          { phrase:"冷手执个热煎堆", meaning:"捡到意外的便宜。", example:"无啦啦中奖，真系冷手执个热煎堆。"},
+          { phrase:"擦鞋", meaning:"拍马屁。", example:"靠擦鞋上位，唔係我杯茶。"},
+          { phrase:"收科", meaning:"收场，结束。", example:"开完会就收科，跟住去做嘢。"},
+          { phrase:"赶唔切", meaning:"赶不及。", example:"如果依家先做，怕赶唔切交。"},
+          { phrase:"大细超", meaning:"偏心。", example:"分任务唔好大细超，要公平啲。"},
+          { phrase:"炖冬菇", meaning:"降职。", example:"做错咗大事，随时畀人炖冬菇。"}
+        ]
+      },
+      {
+        id: "comms",
+        title: "2. 沟通、情感",
+        items: [
+          { phrase:"面善", meaning:"面熟、似曾相识。", example:"你个样好面善，我哋係咪见过？"},
+          { phrase:"踢爆", meaning:"揭发丑事。", example:"唔好踢爆佢住，等我先问清楚。"},
+          { phrase:"玩嘢", meaning:"耍把戏/作弄人。", example:"你唔好玩嘢啦，认真啲得唔得？"},
+          { phrase:"抽水", meaning:"趁人不备取利/占便宜。", example:"佢成日借题发挥抽水，我顶唔顺。"},
+          { phrase:"吹水", meaning:"闲聊/胡说。", example:"我哋坐低吹水先。"},
+          { phrase:"硬食", meaning:"迫不得已全部承受/接受。", example:"呢次冇得拣，只能硬食。"},
+          { phrase:"混吉", meaning:"打断影响别人工作但无帮助。", example:"你唔好喺度混吉，我要专心。"},
+          { phrase:"扮野", meaning:"假装。", example:"唔好扮野啦，你明明知。"},
+          { phrase:"好劲", meaning:"厉害。", example:"你呢个做法好劲，学到嘢。"},
+          { phrase:"嘥气", meaning:"浪费气力。", example:"同佢拗真系嘥气。"},
+          { phrase:"肉酸", meaning:"不好看/难入目。", example:"呢个配色有啲肉酸，不如改改。"},
+          { phrase:"孤寒", meaning:"吝啬。", example:"请杯水都唔肯，真系有啲孤寒。"},
+          { phrase:"甩皮甩骨", meaning:"残缺不全。", example:"份文件甩皮甩骨，补返齐先。"},
+          { phrase:"慢吞吞", meaning:"动作缓慢。", example:"你行得慢吞吞，我哋要迟到喇。"},
+          { phrase:"淆底", meaning:"临阵退缩/不敢承担。", example:"讲到好大声，关键时刻又淆底。"},
+          { phrase:"够姜", meaning:"够胆/很辣。", example:"你够姜就试下同佢讲清楚。"},
+          { phrase:"拍心口", meaning:"承诺保证。", example:"你拍心口话做到，我就信你一次。"},
+          { phrase:"论尽", meaning:"不灵活/动作迟钝。", example:"我今日有啲论尽，做乜都慢半拍。"},
+          { phrase:"唔嗲唔吊", meaning:"吊儿郎当。", example:"你唔好成日唔嗲唔吊啦。"},
+          { phrase:"牙尖嘴利", meaning:"说话犀利。", example:"佢牙尖嘴利，你唔好同佢硬碰。"},
+          { phrase:"稳阵", meaning:"稳妥。", example:"我哋稳阵啲，先检查多次。"},
+          { phrase:"肉紧", meaning:"紧张、投入。", example:"我有啲肉紧，惊会出错。"},
+          { phrase:"易过借火", meaning:"轻而易举。", example:"对你嚟讲易过借火啦。"},
+          { phrase:"照板煮糊", meaning:"容易模仿复制。", example:"跟住步骤做就得，照板煮糊咁简单。"},
+          { phrase:"托手踭", meaning:"故意为难/不肯帮忙。", example:"你唔好托手踭，帮一帮手啦。"},
+          { phrase:"话口未完", meaning:"话还没讲完。", example:"你等阵先，我话口未完。"},
+          { phrase:"把几火", meaning:"很恼火。", example:"佢咁样讲我真系把几火。"},
+          { phrase:"系咁上下", meaning:"差不多是这样。", example:"成件事系咁上下，你大概明啦。"},
+          { phrase:"靠害", meaning:"坑人/存心害人。", example:"咁做会靠害人㗎，唔好。"},
+          { phrase:"直肠直肚", meaning:"性情爽快。", example:"我直肠直肚，有乜就讲。"},
+          { phrase:"面懵心精", meaning:"外表愚钝，内心精明。", example:"唔好睇佢面懵，佢其实心精。"},
+          { phrase:"一头雾水", meaning:"不了解情况。", example:"你讲咁快，我听到一头雾水。"},
+          { phrase:"冇几何", meaning:"不经常。", example:"我冇几何去嗰边。"},
+          { phrase:"冇瘾", meaning:"无聊/没意思。", example:"呢个活动有啲冇瘾。"},
+          { phrase:"驳嘴", meaning:"顶嘴。", example:"你唔好驳嘴，先听我讲完。"},
+          { phrase:"讲开又讲", meaning:"顺势延伸再讲相关事。", example:"讲开又讲，其实仲有一件事要提。"},
+          { phrase:"晒命", meaning:"炫耀。", example:"佢又喺度晒命喇。"},
+          { phrase:"一天都光晒", meaning:"问题全解决了。", example:"搞掂晒，一天都光晒！"},
+          { phrase:"好瘀", meaning:"非常丢脸。", example:"当众被点名，我真系好瘀。"},
+          { phrase:"诈傻扮懵", meaning:"装疯卖傻。", example:"你唔好诈傻扮懵，交代清楚。"},
+          { phrase:"叠埋心水", meaning:"一心一意。", example:"你叠埋心水温书啦。"},
+          { phrase:"唔觉意", meaning:"不小心。", example:"我唔觉意按错咗。"},
+          { phrase:"特登", meaning:"特意/故意。", example:"我特登留返个位俾你。"},
+          { phrase:"唔经唔觉", meaning:"不知不觉。", example:"唔经唔觉就到夜晚黑。"},
+          { phrase:"估唔到", meaning:"没想到。", example:"估唔到会咁顺利。"},
+          { phrase:"咪走鸡", meaning:"不要错失良机。", example:"机会难得，咪走鸡。"},
+          { phrase:"挂住你", meaning:"想念你。", example:"我呢排成日挂住你。"},
+          { phrase:"怕丑", meaning:"害羞。", example:"佢有啲怕丑，唔太出声。"},
+          { phrase:"黑仔", meaning:"倒霉。", example:"今日真系黑仔，乜都唔顺。"},
+          { phrase:"激死人", meaning:"气死人。", example:"你咁慢真系激死人。"},
+          { phrase:"劳气", meaning:"动气。", example:"唔好劳气，慢慢讲。"},
+          { phrase:"今时唔同往日", meaning:"今非昔比。", example:"今时唔同往日，要用新方法啦。"}
+        ]
+      },
+      {
+        id: "daily",
+        title: "3. 日常生活",
+        items: [
+          { phrase:"M记", meaning:"麦当劳 McDonald's 的俗称。", example:"今晚食M记算啦。"},
+          { phrase:"七仔", meaning:"7-ELEVEN 便利店的俗称。", example:"我落楼去七仔买水。"},
+          { phrase:"烂 gag", meaning:"很差劲的笑话/冷笑话。", example:"你呢个烂 gag 真系……"},
+          { phrase:"拗柴", meaning:"拉伤筋骨、肌肉。", example:"跑完步好似拗柴咁痛。"},
+          { phrase:"乸脷", meaning:"高昂。", example:"呢间餐厅价钱好乸脷。"},
+          { phrase:"煲电话粥", meaning:"长时间打电话聊天。", example:"佢哋成晚煲电话粥。"},
+          { phrase:"身光颈靓", meaning:"衣着光鲜。", example:"今日你身光颈靓喎！"},
+          { phrase:"颈渴", meaning:"口渴。", example:"行咗一轮，我好颈渴。"},
+          { phrase:"卡通片", meaning:"动画片。", example:"细路最钟意睇卡通片。"},
+          { phrase:"唔就脚", meaning:"交通不太方便。", example:"嗰度有啲唔就脚，不如搭车。"},
+          { phrase:"放飞机", meaning:"爽约或失信。", example:"你唔好放飞机啊，我等紧你。"},
+          { phrase:"行路", meaning:"走路、步行。", example:"近啫，我哋行路去。"},
+          { phrase:"唔知醒", meaning:"睡过头/未醒。", example:"我今朝唔知醒，迟到喇。"},
+          { phrase:"食夜粥", meaning:"练武术，学功夫。", example:"佢以前食夜粥，好打得。"},
+          { phrase:"古仔", meaning:"故事。", example:"讲个古仔听下。"},
+          { phrase:"脚板底", meaning:"脚掌。", example:"行到脚板底都痛。"},
+          { phrase:"睇水", meaning:"把风，放风。", example:"你去门口睇水，我哋快啲做。"},
+          { phrase:"落街", meaning:"从楼上下到街上。", example:"我落街买啲生果。"},
+          { phrase:"嫌钱腥", meaning:"不重视钱财。", example:"佢好似从来都唔嫌钱腥。"},
+          { phrase:"碌卡", meaning:"刷卡。", example:"可唔可以碌卡俾钱？"},
+          { phrase:"生果", meaning:"水果。", example:"食多啲生果对身体好。"},
+          { phrase:"游水", meaning:"游泳。", example:"夏天我最钟意去游水。"},
+          { phrase:"打波", meaning:"打球。", example:"放工一齐打波？"},
+          { phrase:"睇戏", meaning:"看电影。", example:"周末去睇戏啦。"},
+          { phrase:"打机", meaning:"打游戏机。", example:"你又打机打到捱夜？"},
+          { phrase:"煲水", meaning:"烧水。", example:"我去厨房煲水。"},
+          { phrase:"煮饭", meaning:"做饭。", example:"今晚我煮饭，你洗碗。"},
+          { phrase:"水煲", meaning:"热水壶。", example:"水煲入面仲有热水。"},
+          { phrase:"电饭煲", meaning:"电饭锅。", example:"用电饭煲煮粥好方便。"},
+          { phrase:"镬", meaning:"铁锅。", example:"呢个镬好重。"},
+          { phrase:"碟", meaning:"盘子。", example:"递个碟过嚟。"},
+          { phrase:"匙羹", meaning:"调羹、勺子。", example:"畀我个匙羹搅拌下。"},
+          { phrase:"食霸王餐", meaning:"白吃白喝不付钱。", example:"食霸王餐係唔啱㗎，唔好学。"}
+        ]
+      },
+      {
+        id: "time",
+        title: "4. 时间",
+        items: [
+          { phrase:"啱啱", meaning:"刚刚、刚好。", example:"我啱啱到。"},
+          { phrase:"正话", meaning:"刚才。", example:"正话你讲乜？我听唔到。"},
+          { phrase:"冇几耐", meaning:"没多久、一会儿。", example:"再等冇几耐就轮到你。"},
+          { phrase:"周不时", meaning:"经常、随时。", example:"佢周不时都会嚟探我。"},
+          { phrase:"夜晚黑", meaning:"晚上、夜里。", example:"夜晚黑出街要小心。"},
+          { phrase:"一阵间", meaning:"一会儿。", example:"我一阵间返嚟。"},
+          { phrase:"年尾", meaning:"年底。", example:"年尾通常都特别忙。"},
+          { phrase:"未有耐", meaning:"还早着呢。", example:"依家讲放假？未有耐啦。"},
+          { phrase:"旧时", meaning:"过去。", example:"旧时啲做法同而家唔同。"},
+          { phrase:"天光", meaning:"天亮。", example:"捱到天光先瞓。"},
+          { phrase:"一日到黑", meaning:"整天。", example:"佢一日到黑都喺度忙。"}
+        ]
+      },
+      {
+        id: "proverbs",
+        title: "5. 谚语",
+        items: [
+          { phrase:"十划未有一撇", meaning:"事情刚开始，毫无眉目。", example:"个计划十划未有一撇，慢慢嚟。"},
+          { phrase:"大鸡唔食细米", meaning:"大人物不做小事/大商家不做小生意。", example:"呢啲小数目，大鸡唔食细米啦。"},
+          { phrase:"山大斩埋有柴", meaning:"积少成多。", example:"每日做少少，山大斩埋有柴。"},
+          { phrase:"手板眼见工夫", meaning:"工作范围细，容易。", example:"呢单系手板眼见工夫，好快搞掂。"},
+          { phrase:"有咁啱得咁跷", meaning:"太巧合。", example:"咁都撞到你？有咁啱得咁跷！"},
+          { phrase:"有头威冇尾阵", meaning:"虎头蛇尾。", example:"开始好劲，最后有头威冇尾阵。"},
+          { phrase:"行得正企得正", meaning:"光明正大。", example:"我哋行得正企得正，唔怕查。"},
+          { phrase:"周身刀冇把利", meaning:"没有一技之长。", example:"唔好做周身刀冇把利，练返一样专长。"},
+          { phrase:"珍珠都冇咁真", meaning:"真正是这样的。", example:"呢单嘢珍珠都冇咁真。"},
+          { phrase:"相请不如偶遇", meaning:"表示好客。", example:"相请不如偶遇，一齐食饭啦。"},
+          { phrase:"食碗底反碗面", meaning:"忘恩负义。", example:"咁样对人真系食碗底反碗面。"},
+          { phrase:"画公仔画出肠", meaning:"说话露骨/揭示细节内幕。", example:"你讲到画公仔画出肠咁详细。"},
+          { phrase:"买棺材唔知埞", meaning:"危险将至但本人不觉。", example:"佢咁玩法，真系买棺材唔知埞。"},
+          { phrase:"搞出个大头佛", meaning:"闯祸/惹麻烦。", example:"你唔好乱嚟，搞出个大头佛就大件事。"},
+          { phrase:"打烂沙盆问到笃", meaning:"一直问到底。", example:"佢打烂沙盆问到笃，问到我都服。"},
+          { phrase:"好眉好貌生沙虱", meaning:"样貌好但本性坏。", example:"做人最怕好眉好貌生沙虱。"},
+          { phrase:"着起龙袍都唔似太子", meaning:"怎么包装都不像样（讽刺）。", example:"要靠实力，唔好净系包装。"}
+        ]
+      }
+    ];
+
+    // ------- 语音（粤语） -------
+    const supportsTTS = !!window.speechSynthesis && !!window.SpeechSynthesisUtterance;
+
+    function isSecureContextLike(){
+      return (location.protocol === "https:" || location.hostname === "localhost" || location.protocol === "file:");
+    }
+
+    function pickCantoneseVoice(voices){
+      const want = [
+        v => (v.lang || "").toLowerCase() === "yue-hk",
+        v => (v.lang || "").toLowerCase() === "zh-hk",
+        v => (v.lang || "").toLowerCase().startsWith("yue"),
+        v => (v.lang || "").toLowerCase().startsWith("zh-hk"),
+        v => /cantonese/i.test(v.name || ""),
+        v => /粤|粵/.test(v.name || "")
+      ];
+      for (const test of want){
+        const found = voices.find(test);
+        if (found) return found;
+      }
+      return null;
+    }
+
+    function speakPhrase(text){
+      if (!supportsTTS) {
+        alert("当前浏览器不支持语音播放（Web Speech API）。");
+        return;
+      }
+      window.speechSynthesis.cancel();
+
+      const u = new SpeechSynthesisUtterance(text);
+      u.lang = "yue-HK";
+
+      const voices = window.speechSynthesis.getVoices ? window.speechSynthesis.getVoices() : [];
+      const v = pickCantoneseVoice(voices || []);
+      if (v) u.voice = v;
+
+      u.rate = 0.92;
+      u.pitch = 1.0;
+      u.volume = 1.0;
+
+      window.speechSynthesis.speak(u);
+    }
+
+    function stopSpeaking(){
+      if (supportsTTS) window.speechSynthesis.cancel();
+    }
+
+    // ------- UI -------
+    const app = document.getElementById("app");
+    const q = document.getElementById("q");
+    const chips = document.getElementById("chips");
+
+    const dotApi = document.getElementById("dotApi");
+    const dotYue = document.getElementById("dotYue");
+    const dotSecure = document.getElementById("dotSecure");
+
+    const state = { activeCat:"all", query:"" };
+
+    function renderChips(){
+      const all = [{ id:"all", title:"全部" }].concat(DATA.map(c => ({id:c.id, title:c.title})));
+      chips.innerHTML = "";
+      all.forEach(c => {
+        const b = document.createElement("button");
+        b.type = "button";
+        b.className = "chip";
+        b.textContent = c.title;
+        b.setAttribute("aria-pressed", String(state.activeCat === c.id));
+        b.addEventListener("click", () => {
+          state.activeCat = c.id;
+          renderChips();
+          render();
+        });
+        chips.appendChild(b);
+      });
+    }
+
+    function matchItem(item, query){
+      if (!query) return true;
+      const s = query.trim().toLowerCase();
+      if (!s) return true;
+      const hay = (item.phrase + " " + item.meaning + " " + item.example).toLowerCase();
+      return hay.includes(s);
+    }
+
+    function render(){
+      app.innerHTML = "";
+      const cats = DATA.filter(c => state.activeCat === "all" ? true : c.id === state.activeCat);
+
+      cats.forEach(cat => {
+        const items = cat.items.filter(it => matchItem(it, state.query));
+        if (state.query && items.length === 0) return;
+
+        const details = document.createElement("details");
+        details.open = state.query ? true : false;
+
+        const summary = document.createElement("summary");
+        const left = document.createElement("div");
+        const title = document.createElement("div");
+        title.className = "cat-title";
+        title.textContent = cat.title;
+        const meta = document.createElement("div");
+        meta.className = "cat-meta";
+        meta.textContent = "条目数：" + items.length;
+        left.appendChild(title);
+        left.appendChild(meta);
+
+        const caret = document.createElement("div");
+        caret.className = "caret";
+        caret.textContent = "⌄";
+
+        summary.appendChild(left);
+        summary.appendChild(caret);
+        details.appendChild(summary);
+
+        const list = document.createElement("div");
+        list.className = "list";
+
+        items.forEach(it => {
+          const card = document.createElement("div");
+          card.className = "item";
+
+          const top = document.createElement("div");
+          top.className = "item-top";
+
+          const text = document.createElement("div");
+          const p = document.createElement("div");
+          p.className = "phrase";
+          p.textContent = it.phrase;
+          const m = document.createElement("div");
+          m.className = "meaning";
+          m.textContent = it.meaning;
+          text.appendChild(p);
+          text.appendChild(m);
+
+          const btns = document.createElement("div");
+          btns.className = "btns";
+
+          const play = document.createElement("button");
+          play.type = "button";
+          play.textContent = "播放粤语";
+          play.addEventListener("click", () => speakPhrase(it.phrase));
+
+          btns.appendChild(play);
+
+          top.appendChild(text);
+          top.appendChild(btns);
+
+          const ex = document.createElement("div");
+          ex.className = "example";
+          const label = document.createElement("div");
+          label.className = "label";
+          label.textContent = "例子";
+          const exText = document.createElement("div");
+          exText.className = "text";
+          exText.textContent = it.example;
+
+          ex.appendChild(label);
+          ex.appendChild(exText);
+
+          card.appendChild(top);
+          card.appendChild(ex);
+
+          list.appendChild(card);
+        });
+
+        details.appendChild(list);
+        app.appendChild(details);
+      });
+    }
+
+    function updateTtsStatus(){
+      dotApi.className = "dot " + (supportsTTS ? "on" : "bad");
+      dotSecure.className = "dot " + (isSecureContextLike() ? "on" : "warn");
+
+      if (!supportsTTS){
+        dotYue.className = "dot bad";
+        return;
+      }
+      const voices = window.speechSynthesis.getVoices ? window.speechSynthesis.getVoices() : [];
+      const v = pickCantoneseVoice(voices || []);
+      dotYue.className = "dot " + (v ? "on" : "warn");
+    }
+
+    if (supportsTTS && window.speechSynthesis.onvoiceschanged !== undefined){
+      window.speechSynthesis.onvoiceschanged = function(){ updateTtsStatus(); };
+    }
+
+    q.addEventListener("input", e => {
+      state.query = e.target.value || "";
+      render();
+    });
+
+    document.getElementById("stopSpeak").addEventListener("click", stopSpeaking);
+
+    document.getElementById("expandAll").addEventListener("click", () => {
+      document.querySelectorAll("details").forEach(d => d.open = true);
+    });
+
+    document.getElementById("collapseAll").addEventListener("click", () => {
+      document.querySelectorAll("details").forEach(d => d.open = false);
+      if ((state.query || "").trim()){
+        document.querySelectorAll("details").forEach(d => d.open = true);
+      }
+    });
+
+    renderChips();
+    render();
+    updateTtsStatus();
+
+    if (supportsTTS) {
+      try { window.speechSynthesis.getVoices(); } catch(e){}
+      setTimeout(updateTtsStatus, 800);
+      setTimeout(updateTtsStatus, 1800);
+    }
+  </script>
+
+
+</body></html>
