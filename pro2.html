@@ -1,0 +1,460 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta name="x-poe-datastore-behavior" content="local_only"><meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline' 'unsafe-eval' data: blob: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://code.jquery.com https://unpkg.com https://d3js.org https://threejs.org https://cdn.plot.ly https://stackpath.bootstrapcdn.com https://maps.googleapis.com https://cdn.tailwindcss.com https://ajax.googleapis.com https://kit.fontawesome.com https://cdn.datatables.net https://maxcdn.bootstrapcdn.com https://code.highcharts.com https://tako-static-assets-production.s3.amazonaws.com https://www.youtube.com https://fonts.googleapis.com https://fonts.gstatic.com https://pfst.cf2.poecdn.net https://puc.poecdn.net https://i.imgur.com https://wikimedia.org https://*.icons8.com https://*.giphy.com https://picsum.photos https://images.unsplash.com; frame-src 'self' https://www.youtube.com https://trytako.com; child-src 'self'; manifest-src 'self'; worker-src 'self'; upgrade-insecure-requests; block-all-mixed-content;">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>粤语俗语收藏集 | Cantonese Idioms</title>
+    <style>
+        :root {
+            /* Light Mode - Aspie Aesthetic (Calm, Muted, Pastel) */
+            --bg-color: #F7F5F0; /* 暖米色，像旧书纸 */
+            --card-bg: #FFFFFF;
+            --text-main: #4A4A4A; /* 深灰而非纯黑，减少视觉压力 */
+            --text-sub: #787878;
+            --accent-1: #A3B18A; /* 鼠尾草绿 */
+            --accent-2: #B5838D; /* 干燥玫瑰粉 */
+            --accent-3: #6D9DC5; /* 雾霾蓝 */
+            --border-radius: 12px;
+            --shadow: 0 4px 12px rgba(0,0,0,0.05);
+            --font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                /* Dark Mode - Low Contrast, Soothing Dark */
+                --bg-color: #2C2C2C;
+                --card-bg: #383838;
+                --text-main: #E0E0E0;
+                --text-sub: #A0A0A0;
+                --accent-1: #81B29A;
+                --accent-2: #E07A5F;
+                --accent-3: #8ECAE6;
+                --shadow: 0 4px 12px rgba(0,0,0,0.2);
+            }
+        }
+
+        * {
+            box-sizing: border-box;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        body {
+            font-family: var(--font-family);
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            margin: 0;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 20px;
+            padding: 20px 0;
+        }
+
+        h1 {
+            font-weight: 600;
+            color: var(--accent-2);
+            margin: 0;
+            font-size: 1.8rem;
+            letter-spacing: 1px;
+        }
+
+        p.subtitle {
+            color: var(--text-sub);
+            font-size: 0.9rem;
+            margin-top: 5px;
+        }
+
+        /* Tabs Navigation */
+        .tabs {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            background: var(--card-bg);
+            border: 1px solid var(--accent-1);
+            color: var(--text-main);
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            outline: none;
+        }
+
+        .tab-btn.active {
+            background: var(--accent-1);
+            color: #fff;
+            border-color: var(--accent-1);
+        }
+
+        /* Grid Layout */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Card Style */
+        .card {
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            box-shadow: var(--shadow);
+            border-left: 5px solid var(--accent-3);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .term {
+            font-size: 1.4rem;
+            font-weight: bold;
+            color: var(--text-main);
+        }
+
+        .definition {
+            font-size: 1.1rem;
+            color: var(--text-sub);
+            margin-bottom: 15px;
+            border-bottom: 1px dashed var(--accent-1);
+            padding-bottom: 10px;
+        }
+
+        .example-box {
+            background-color: rgba(0,0,0,0.03);
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            margin-top: auto;
+        }
+
+        .example-label {
+            font-size: 1.0rem;
+            color: var(--accent-2);
+            font-weight: bold;
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .example-text {
+            font-style: italic;
+            font-size: 1.1rem;
+            color: var(--text-main);
+        }
+
+        /* Audio Button */
+        .play-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--accent-3);
+            padding: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .play-btn svg {
+            width: 24px;
+            height: 24px;
+            fill: currentColor;
+        }
+
+        .play-btn:hover {
+            opacity: 0.7;
+            transform: scale(1.1);
+        }
+
+        .play-btn:active {
+            transform: scale(0.95);
+        }
+
+        /* Toast Notification */
+        #toast {
+            visibility: hidden;
+            min-width: 250px;
+            background-color: var(--accent-1);
+            color: #fff;
+            text-align: center;
+            border-radius: 50px;
+            padding: 12px;
+            position: fixed;
+            z-index: 1;
+            left: 50%;
+            bottom: 30px;
+            transform: translateX(-50%);
+            font-size: 0.9rem;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+
+        #toast.show {
+            visibility: visible;
+            animation: fadein 0.5s, fadeout 0.5s 2.5s;
+        }
+
+        @keyframes fadein {
+            from {bottom: 0; opacity: 0;}
+            to {bottom: 30px; opacity: 1;}
+        }
+
+        @keyframes fadeout {
+            from {bottom: 30px; opacity: 1;}
+            to {bottom: 0; opacity: 0;}
+        }
+
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>粤语俗语收藏集</h1>
+    <p class="subtitle">点击喇叭图标播放粤语发音</p>
+</header>
+
+<div class="tabs" id="categoryTabs">
+    <button class="tab-btn active" onclick="filterCategory('all')">全部</button>
+    <button class="tab-btn" onclick="filterCategory('work')">工作</button>
+    <button class="tab-btn" onclick="filterCategory('emotion')">沟通情感</button>
+    <button class="tab-btn" onclick="filterCategory('life')">日常生活</button>
+    <button class="tab-btn" onclick="filterCategory('proverb')">谚语</button>
+</div>
+
+<main class="grid" id="contentGrid">
+    <!-- Cards will be injected here by JS -->
+</main>
+
+<div id="toast">正在播放...</div>
+
+<script>
+    // 数据源：基于提供的文档 "cantonese_Jan_2026_a.docx"
+    // 已人工添加了适合的粤语例句
+    const idiomsData = [
+        // 1. 工作
+        { term: "老细", def: "上司、Boss。", cat: "work", ex: "老细今日心情唔好，大家醒定啲。" },
+        { term: "好夹", def: "合得来。", cat: "work", ex: "我同新嚟个同事好夹，做嘢好顺。" },
+        { term: "话头醒尾", def: "机灵，一点就通。", cat: "work", ex: "个实习生话头醒尾，教一次就识。" },
+        { term: "湿滞", def: "很麻烦、很棘手、难以处理。", cat: "work", ex: "呢单工程好湿滞，好多手尾跟。" },
+        { term: "大镬", def: "事态严重，形容一件事件发展到无法承受的危险地步。", cat: "work", ex: "死啦，唔记得交报告，今次大镬了！" },
+        { term: "孭镬", def: "背黑锅。指找一个人或一小撮人为某一过失负责。", cat: "work", ex: "明明系大家决定嘅，点解要我一个人孭镬？" },
+        { term: "揸流滩", def: "偷懒，做事马虎。", cat: "work", ex: "你唔好再揸流滩啦，老细望住呀。" },
+        { term: "捱夜", def: "熬夜。", cat: "work", ex: "为咗赶project，我已经连续三日捱夜。" },
+        { term: "冇符", def: "束手无策。", cat: "work", ex: "个客一定要咁改，我都冇符。" },
+        { term: "造马", def: "造假。", cat: "work", ex: "个抽奖结果摆明系造马啦，内定嘅。" },
+        { term: "搵食", def: "去工作赚取工资糊口。", cat: "work", ex: "大家都系为两餐搵食啫，何必咁认真。" },
+        { term: "忙到一头烟", def: "形容人非常忙。", cat: "work", ex: "今日好多单要跟，忙到一头烟。" },
+        { term: "忙到七彩", def: "忙得够呛。", cat: "work", ex: "年尾埋数，会计部忙到七彩。" },
+        { term: "有料", def: "有学问、实力，水平高。", cat: "work", ex: "个新经理真系有料，几下就搞掂个难题。" },
+        { term: "一手一脚", def: "独自干某件事，完成某项工作。", cat: "work", ex: "呢间铺系佢一手一脚搞起嘅。" },
+        { term: "跟手尾", def: "替人家完成未做完的工作，引申为承接人家的麻烦事。", cat: "work", ex: "佢辞职走咗，留低好多嘢要我跟手尾。" },
+        { term: "做野冇手尾", def: "形容人做事有头无尾，或者做完一件事不收拾东西。", cat: "work", ex: "你做野冇手尾，次次都要人帮你执。" },
+        { term: "两头唔到岸", def: "两头够不着；两头落空。", cat: "work", ex: "你想转工又唔敢辞职，搞到两头唔到岸。" },
+        { term: "一镬泡", def: "形容事情搞糟了，难以收拾。", cat: "work", ex: "个计划改完又改，依家搞到一镬泡。" },
+        { term: "冷手执个热煎堆", def: "比喻捡到意外的便宜。", cat: "work", ex: "佢辞职个位俾你顶上，真系冷手执个热煎堆。" },
+        { term: "擦鞋", def: "拍马屁。", cat: "work", ex: "佢最叻就系擦鞋，所以升得咁快。" },
+        { term: "收科", def: "收场，结束，了结。", cat: "work", ex: "件事搞大咗，睇你怎么收科。" },
+        { term: "赶唔切", def: "赶不及。", cat: "work", ex: "我要赶尾班车，赶唔切食饭啦。" },
+        { term: "大细超", def: "偏心，处事不公平。", cat: "work", ex: "老细明显大细超，净系对佢好。" },
+        { term: "炖冬菇", def: "降职。", cat: "work", ex: "佢做错大嘢，俾公司炖冬菇去做文员。" },
+
+        // 2. 沟通情感
+        { term: "踢爆", def: "把他人的丑事给揭发。", cat: "emotion", ex: "佢讲大话即场俾人踢爆。" },
+        { term: "玩嘢", def: "耍宝、作弄人、耍花样。", cat: "emotion", ex: "你系咪玩嘢呀？叫咗你唔好郁。" },
+        { term: "抽水", def: "趁人不备从中取利，或占女人便宜。", cat: "emotion", ex: "佢讲嘢好钟意抽水，借机讽刺人。" },
+        { term: "吹水", def: "指闲聊，或者形容他人说话没有凭据，胡说八道。", cat: "emotion", ex: "唔好信佢啦，佢成日吹水唔抹嘴。" },
+        { term: "硬食", def: "迫不得已全部承受。", cat: "emotion", ex: "个客退货，公司唔赔，我要硬食个损失。" },
+        { term: "混吉", def: "打断别人工作又无帮衬的无聊行为。", cat: "emotion", ex: "入嚟问完一轮又唔买，真系混吉。" },
+        { term: "扮野", def: "假装；如装傻、装无知。", cat: "emotion", ex: "你唔好扮野啦，明明系你食咗个蛋糕。" },
+        { term: "嘥气", def: "浪费气力。", cat: "emotion", ex: "同佢讲道理真系嘥气。" },
+        { term: "肉酸", def: "即「核突」，不好看，难以入目的意思。", cat: "emotion", ex: "件衫配色好肉酸，唔好买啦。" },
+        { term: "孤寒", def: "不愿多出分文，吝啬。", cat: "emotion", ex: "佢好孤寒，请食饭都系去茶餐厅。" },
+        { term: "甩皮甩骨", def: "残缺不全，不完整。", cat: "emotion", ex: "本书借俾你搞到甩皮甩骨。" },
+        { term: "慢吞吞", def: "形容别人动作或行为缓慢。", cat: "emotion", ex: "行路慢吞吞，几时先到呀？" },
+        { term: "淆底", def: "临阵退缩，做了亏心事不敢承认责任。", cat: "emotion", ex: "叫佢去玩过山车，点知去到佢就淆底。" },
+        { term: "够姜", def: "形容很辣，够胆的意思。", cat: "emotion", ex: "你够姜就同老细讲辞职！" },
+        { term: "拍心口", def: "指向人承诺保证做到某事或证实某事。", cat: "emotion", ex: "佢拍心口话一定搞得掂。" },
+        { term: "论尽", def: "不灵活、动作迟钝。", cat: "emotion", ex: "佢手脚论尽，成日打烂野。" },
+        { term: "唔嗲唔吊", def: "没心没肺，吊儿郎当的模样。", cat: "emotion", ex: "做人唔好唔嗲唔吊，要有啲目标。" },
+        { term: "牙尖嘴利", def: "尖嘴薄舌；说话犀利，不让人。", cat: "emotion", ex: "个女仔牙尖嘴利，嘈交未输过。" },
+        { term: "稳阵", def: "稳妥。", cat: "emotion", ex: "买蓝筹股收息比较稳阵。" },
+        { term: "肉紧", def: "紧张、投入。", cat: "emotion", ex: "睇鬼片个阵佢捉到我只手好肉紧。" },
+        { term: "易过借火", def: "形容所办的事轻而易举。", cat: "emotion", ex: "考试合格啫，易过借火啦。" },
+        { term: "照板煮糊", def: "形容极为容易模仿、复制。", cat: "emotion", ex: "你照板煮糊跟住做就得架啦。" },
+        { term: "托手踭", def: "故意为难、不肯帮忙。", cat: "emotion", ex: "我想叫佢帮手，点知俾佢托手踭。" },
+        { term: "话口未完", def: "话还没讲完。", cat: "emotion", ex: "话口未完，曹操就到。" },
+        { term: "把几火", def: "很恼火、气愤。", cat: "emotion", ex: "提起佢我就把几火。" },
+        { term: "系咁上下", def: "差不多是这样。", cat: "emotion", ex: "佢嘅能力系咁上下架啦，唔好强求。" },
+        { term: "靠害", def: "坑人，存心害人。", cat: "emotion", ex: "你俾条死路我行，系咪靠害呀？" },
+        { term: "直肠直肚", def: "直肠子，指性情爽快。", cat: "emotion", ex: "佢为人直肠直肚，有嗰句讲嗰句。" },
+        { term: "面懵心精", def: "外表看来似乎很愚钝，实际上心里很精明。", cat: "emotion", ex: "唔好睇佢傻傻地，其实面懵心精。" },
+        { term: "一头雾水", def: "糊里糊涂；不了解情况。", cat: "emotion", ex: "佢讲咗半个钟，我依然系一头雾水。" },
+        { term: "冇瘾", def: "无聊，没意思。", cat: "emotion", ex: "个party好闷，真系冇瘾。" },
+        { term: "讲开又讲", def: "顺着在讨论的事延伸。", cat: "emotion", ex: "讲开又讲，你上次去旅行点呀？" },
+        { term: "晒命", def: "炫耀、显摆。", cat: "emotion", ex: "佢成日喺朋友圈晒命，话老公送名牌。" },
+        { term: "一天都光晒", def: "问题全解决了，出现大好局面。", cat: "emotion", ex: "只要你肯帮手，真系一天都光晒。" },
+        { term: "好瘀", def: "非常丢脸。", cat: "emotion", ex: "当街跌亲，真系好瘀呀。" },
+        { term: "诈傻扮懵", def: "装疯卖傻。", cat: "emotion", ex: "问佢借钱佢就诈傻扮懵。" },
+        { term: "叠埋心水", def: "意指一心一意。", cat: "emotion", ex: "你都系叠埋心水温书啦，唔好谂去玩。" },
+        { term: "唔觉意", def: "不留心、不小心。", cat: "emotion", ex: "我唔觉意踩亲佢只脚。" },
+        { term: "特登", def: "特意、故意。", cat: "emotion", ex: "我特登买早餐俾你食架。" },
+        { term: "唔经唔觉", def: "不知不觉。", cat: "emotion", ex: "唔经唔觉，原来已经十一点。" },
+        { term: "咪走鸡", def: "不要错失良机。", cat: "emotion", ex: "大减价呀，咪走鸡！" },
+        { term: "黑仔", def: "倒霉。", cat: "emotion", ex: "今日好黑仔，出门就落大雨。" },
+        { term: "今时唔同往日", def: "现在和以前不一样了，今非昔比的意思。", cat: "emotion", ex: "今时唔同往日，依家楼价贵好多。" },
+
+        // 3. 日常生活
+        { term: "M记", def: "麦当劳 McDonald's 的俗称。", cat: "life", ex: "今晚唔煮饭，去食M记咯。" },
+        { term: "七仔", def: "3-ELEVEN 便利店的俗称。", cat: "life", ex: "口渴，去七仔买支水先。" },
+        { term: "烂 gag", def: "很差劲的笑话，又称为「冷笑话」。", cat: "life", ex: "你个烂gag一点都唔好笑。" },
+        { term: "拗柴", def: "拉伤筋骨、肌肉。", cat: "life", ex: "打波小心啲，唔好拗柴。" },
+        { term: "乸脷", def: "高昂（通常指价格）。", cat: "life", ex: "呢餐饭个价钱真系好乸脷。" },
+        { term: "煲电话粥", def: "长时间地打电话聊天。", cat: "life", ex: "佢每晚都同男朋友煲电话粥。" },
+        { term: "身光颈靓", def: "形容人衣着光鲜。", cat: "life", ex: "着到身光颈靓，去饮呀？" },
+        { term: "唔就脚", def: "交通不太方便。", cat: "life", ex: "间餐厅好唔就脚，要行好耐。" },
+        { term: "放飞机", def: "指爽约或失信行为。", cat: "life", ex: "约好睇戏，点知佢放我飞机。" },
+        { term: "唔知醒", def: "没醒过来，睡过头了。", cat: "life", ex: "今朝唔知醒，迟到咗半个钟。" },
+        { term: "食夜粥", def: "练武术，学功夫。", cat: "life", ex: "佢食过夜粥架，好打得。" },
+        { term: "睇水", def: "把风，放风。", cat: "life", ex: "你入去偷食，我帮你睇水。" },
+        { term: "嫌钱腥", def: "形容人不重视钱财。", cat: "life", ex: "有钱都唔赚，你系咪嫌钱腥？" },
+        { term: "碌卡", def: "刷卡。", cat: "life", ex: "冇现金喺身，可唔可以碌卡？" },
+
+        // 4. 谚语
+        { term: "十划未有一撇", def: "事情刚刚开始，毫无眉目。", cat: "proverb", ex: "结婚？十划未有一撇，拍拖都未有。" },
+        { term: "大鸡唔食细米", def: "大人物唔做小事；或者大商家唔做小生意。", cat: "proverb", ex: "佢大鸡唔食细米，呢啲细单野佢唔接架。" },
+        { term: "山大斩埋有柴", def: "每椿收获唔多，但系积聚起来就好多。", cat: "proverb", ex: "虽然人工加得少，但山大斩埋有柴嘛。" },
+        { term: "手板眼见工夫", def: "比喻工作范围细，工作容易。", cat: "proverb", ex: "洗碗呢啲手板眼见工夫，好易做啫。" },
+        { term: "有咁啱得咁跷", def: "太巧合，太意外。", cat: "proverb", ex: "真系有咁啱得咁跷，去旅行都撞到你。" },
+        { term: "有头威冇尾阵", def: "虎头蛇尾，有始没终。", cat: "proverb", ex: "佢做野成日有头威冇尾阵，信唔过。" },
+        { term: "行得正企得正", def: "做人、行为光明正大。", cat: "proverb", ex: "我行得正企得正，怕咩人讲闲话。" },
+        { term: "周身刀冇把利", def: "比喻没有一技之长。", cat: "proverb", ex: "学咁多野做咩，周身刀冇把利。" },
+        { term: "珍珠都冇咁真", def: "真正是这样的。", cat: "proverb", ex: "我讲嘅全部系事实，珍珠都冇咁真。" },
+        { term: "相请不如偶遇", def: "表示好客。", cat: "proverb", ex: "既然撞到，相请不如偶遇，一齐食饭啦。" },
+        { term: "食碗底反碗面", def: "忘恩负义，不仁不义。", cat: "proverb", ex: "佢食碗底反碗面，帮完佢仲要害我。" },
+        { term: "画公仔画出肠", def: "说话露骨；或者指揭示细节内幕。", cat: "proverb", ex: "明就明啦，唔使画公仔画出肠呀嘛？" },
+        { term: "买棺材唔知埞", def: "行为将会引起好大危险，而本人就意识唔到。", cat: "proverb", ex: "你敢得罪老细？真系买棺材唔知埞。" },
+        { term: "搞出个大头佛", def: "闯祸；或者惹了麻烦。", cat: "proverb", ex: "叫你小心啲，依家搞出个大头佛点算？" },
+        { term: "打烂沙盆问到笃", def: "一直问到底。", cat: "proverb", ex: "你唔好成日打烂沙盆问到笃啦，好烦呀。" },
+        { term: "好眉好貌生沙虱", def: "生得一副好容貌，但系本性就坏。", cat: "proverb", ex: "估唔到佢偷野，真系好眉好貌生沙虱。" },
+        { term: "着起龙袍都唔似太子", def: "讽刺人不理怎样包装都不象样。", cat: "proverb", ex: "佢着西装都系怪怪地，着起龙袍都唔似太子。" }
+    ];
+
+    const grid = document.getElementById('contentGrid');
+    const tabs = document.querySelectorAll('.tab-btn');
+
+    // 渲染卡片函数
+    function renderCards(filter = 'all') {
+        grid.innerHTML = '';
+        
+        const filteredData = filter === 'all' 
+            ? idiomsData 
+            : idiomsData.filter(item => item.cat === filter);
+
+        filteredData.forEach(item => {
+            const card = document.createElement('article');
+            card.className = 'card';
+            
+            // 设置边框颜色根据分类
+            let accentColor = 'var(--accent-3)';
+            if(item.cat === 'work') accentColor = 'var(--accent-3)';
+            if(item.cat === 'emotion') accentColor = 'var(--accent-2)';
+            if(item.cat === 'life') accentColor = 'var(--accent-1)';
+            if(item.cat === 'proverb') accentColor = '#E07A5F';
+            
+            card.style.borderLeftColor = accentColor;
+
+            card.innerHTML = `
+                <div class="card-header">
+                    <span class="term">${item.term}</span>
+                    <button class="play-btn" onclick="playAudio('${item.term}')" aria-label="播放发音">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/>
+                        </svg>
+                    </button>
+                </div>
+                <div class="definition">${item.def}</div>
+                <div class="example-box">
+                    <span class="example-label" style="color:${accentColor}">例句：</span>
+                    <span class="example-text">${item.ex}</span>
+                </div>
+            `;
+            grid.appendChild(card);
+        });
+    }
+
+    // 过滤功能
+    function filterCategory(cat) {
+        // 更新按钮状态
+        tabs.forEach(btn => btn.classList.remove('active'));
+        event.target.classList.add('active');
+        
+        // 重新渲染
+        renderCards(cat);
+    }
+
+    // 语音播放功能 (华为浏览器兼容性处理)
+    function playAudio(text) {
+        // 取消当前正在播放的
+        window.speechSynthesis.cancel();
+
+        const utterance = new SpeechSynthesisUtterance(text);
+        
+        // 关键：设置语言为粤语 (香港)
+        // 华为/Android 系统通常支持 zh-HK, zh-TW, 或 yue-HK
+        utterance.lang = 'zh-HK'; 
+        
+        // 语速稍微放慢一点点，更清晰
+        utterance.rate = 0.9;
+        
+        // 尝试寻找最佳声音 (可选优化)
+        const voices = window.speechSynthesis.getVoices();
+        const cantoneseVoice = voices.find(v => v.lang.includes('HK') || v.lang.includes('yue'));
+        if (cantoneseVoice) {
+            utterance.voice = cantoneseVoice;
+        }
+
+        utterance.onstart = function() {
+            showToast("正在播放: " + text);
+        };
+
+        utterance.onerror = function(e) {
+            console.error("Speech error:", e);
+            // 如果不支持粤语，可能会静默失败或报错，这里做一个简单提示
+            // 华为浏览器通常使用 Google TTS 或 HIAI 引擎，只要系统语言包支持即可
+        };
+
+        window.speechSynthesis.speak(utterance);
+    }
+
+    // Toast 提示
+    function showToast(message) {
+        const toast = document.getElementById("toast");
+        toast.innerText = message;
+        toast.className = "show";
+        setTimeout(function(){ toast.className = toast.className.replace("show", ""); }, 3000);
+    }
+
+    // 初始化
+    // 某些浏览器需要用户交互后才能加载 Voice 列表，所以添加监听
+    window.speechSynthesis.onvoiceschanged = function() {
+        // 可以在这里预加载声音列表
+    };
+
+    renderCards('all');
+
+</script>
+
+
+
+</body></html>
