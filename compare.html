@@ -153,7 +153,7 @@
         /* 内容布局 */
         .row {
             display: flex;
-            justify-content: space-between;
+            /*justify-content: space-between;*/
             align-items: baseline;
             margin-bottom: 6px;
         }
@@ -199,7 +199,7 @@
             font-size: 0.95rem;
         }
         .ex-sub {
-            font-size: 0.8rem;
+            font-size: 0.95rem;
             color: var(--text-sub);
         }
 
@@ -365,18 +365,18 @@
 
             card.innerHTML = `
                 <div class="row">
-                    <span class="label">书面语</span>
+                    <span class="label">书面语 ：</span>
                     <span class="standard-word">${item.std}</span>
                 </div>
                 <div class="row" style="margin-bottom: 2px;">
-                    <span class="label">粤语口语</span>
+                    <span class="label">粤口语 ：</span>
                     <span class="cantonese-word">${item.cant}</span>
                 </div>
                 <div class="jyutping">${item.jp}</div>
                 
                 <div class="example-section">
-                    <div class="ex-text"><strong>粤：</strong>${item.cantEx}</div>
                     <div class="ex-sub">普：${item.stdEx}</div>
+                    <div class="ex-text"><strong>粤：${item.cantEx}</strong></div>
                 </div>
 
                 <div class="play-row">
