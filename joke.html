@@ -217,32 +217,95 @@
         padding-inline: 1.1rem;
       }
     }
+
+    /* Header CSS */
+    #navbar {
+      background: var(--bg);
+      padding: 0.75rem 1rem;
+      position: sticky;
+      top: 0;
+      z-index: 30;
+      max-width: 1080px;
+      margin: 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+    }
+
+    #navbar nav {
+      position: absolute;
+      right: 2rem;
+      display: flex;
+      gap: 20px;
+    }
+
+    #navbar .title {
+      color: var(--fg);
+      font-size: 1.8rem;
+      font-weight: 700;
+      margin-left: 0;
+    }
+
+    #navbar a {
+      text-decoration: none;
+      color: var(--fg);
+      font-size: 1.0rem;
+      font-weight: 500;
+      margin-left: 0;
+    }
+
+    .home-icon {
+      width: 43px;
+      height: 43px;
+      background: gba(255,255,255,0.2);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      border: 2px solid;
+    }
+        
+    .home-icon:hover {
+      background: lightgreen;
+      border-color: lightgreen;
+      transform: translateY(-2px);
+    }
+        
+    .home-icon svg {
+      width: 43px;
+      height: 43px;
+      fill: #0ea5e9;
+    }
   </style>
 </head>
 <body>
 <div class="page">
+  <!--
   <header>
     <h1>笑話：書面語 vs 粵語口語</h1>
-    <!-- <div class="subtitle">笑话：书面语 vs 粤语口语</div> -->
+  </header>
+  -->
+    <header id="navbar">
+    <div class="title">粵語讲笑話</div>
+      <nav>
+        <div class="logo-section">
+          <a href="https://cantogo.github.io" class="home-icon" title="轻轻松松、怏怏乐乐学粤语">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+              <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"></path>
+            </svg>
+          </a>
+        </div>
+      </nav>
+    </header>
+
+  <main>
     <p class="intro">
     提示： 点「粵語播放」朗读笑話。希望您可以更有趣地学习粤语，不要感到有压力 :)
     </p>
-    <!--
-    <section class="speech-note">
-      <div class="speech-note-title">語音說明</div>
-      <div>
-        本頁用瀏覽器內置 <code>speechSynthesis</code> 朗讀粵語
-        （優先 <code>zh-HK</code> / <code>zh-yue</code>），實際效果視乎你裝置支援。
-      </div>
-      <ul>
-        <li>如顯示「此瀏覽器不支援語音朗讀」，可試用 Chrome / Edge / Safari 最新版。</li>
-        <li>每條笑話右邊按「▶ 粵語播放」即可播放，再按一次可停止。</li>
-      </ul>
-    </section>
-    -->
-  </header>
-
-  <main>
     <section class="joke-list" id="jokeList">
       <!-- 1 -->
       <article class="joke-card">
@@ -1106,5 +1169,33 @@
   })();
 </script>
 
+    <script>
+        let lastScrollTop = 0;
+        const navbar = document.getElementById("navbar");
+        const navbarHeight = navbar.offsetHeight;
+
+        window.addEventListener("scroll", function() {
+            // Get current scroll position
+            let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            
+            // Prevent negative scrolling (bounce effect on mobile)
+            if (scrollTop < 0) {
+                scrollTop = 0;
+            }
+
+            if (scrollTop > lastScrollTop) {
+                // User is scrolling DOWN
+                // Move the navbar up by its height (negative top value)
+                navbar.style.top = `-${navbarHeight}px`;
+            } else {
+                // User is scrolling UP
+                // Reset top to 0
+                navbar.style.top = "0";
+            }
+            
+            // Update last scroll position
+            lastScrollTop = scrollTop;
+        });
+    </script>
 
 </body></html>
