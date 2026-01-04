@@ -12,6 +12,7 @@
             --border-color: #E6E6E6;
             
             /* 分类强调色 - 柔和版 */
+            --tag-all: #94A8B3; /* All */
             --tag-people: #94A8B3; /* 雾霾蓝 - 人地时 */
             --tag-verb: #9CB0A3;   /* 鼠尾草绿 - 动词 */
             --tag-conn: #C7B2B2;   /* 干燥玫瑰 - 连接词 */
@@ -32,6 +33,7 @@
                 --text-sub: #D1D1D1;
                 --border-color: #5C5C5C;
                 
+                --tag-all: #708591;
                 --tag-people: #708591;
                 --tag-verb: #7A8F82;
                 --tag-conn: #A69090;
@@ -110,7 +112,7 @@
         }
 
         /* 不同分类激活时的颜色 */
-        .filter-btn[data-filter="all"].active { background-color: var(--text-main); }
+        .filter-btn[data-filter="all"].active { background-color: var(--tag-all); }
         .filter-btn[data-filter="people"].active { background-color: var(--tag-people); }
         .filter-btn[data-filter="verb"].active { background-color: var(--tag-verb); }
         .filter-btn[data-filter="conn"].active { background-color: var(--tag-conn); }
@@ -353,7 +355,7 @@
         { cat: 'tone', std: '了 (完成)', cant: '喇', jp: 'laa1', stdEx: '我吃饱了。', cantEx: '我食饱喇。' },
         { cat: 'tone', std: '罢了', cant: '罢', jp: 'baa6', stdEx: '算了吧。', cantEx: '算数罢啦。' },
         { cat: 'tone', std: '吧 (催促)', cant: '啦', jp: 'laa1', stdEx: '你快一点吧！', cantEx: '你快啲啦！' },
-        { cat: 'tone', std: '吧 (建议)', cant: '丫', jp: 'aa1', stdEx: '不如去看电影吧？', cantEx: '不如去睇戏丫？' },
+        { cat: 'tone', std: '吧 (建议)', cant: '吖', jp: 'aa1', stdEx: '不如去看电影吧？', cantEx: '不如去睇戏吖？' },
         { cat: 'tone', std: '喔！竟然', cant: '喎', jp: 'wo3', stdEx: '原来是你喔！', cantEx: '原来系你喎！' },
         { cat: 'tone', std: '而已', cant: '啫', jp: 'ze1', stdEx: '十块钱而已。', cantEx: '十蚊啫，好平。' },
         { cat: 'tone', std: '而已 (强调)', cant: '之嘛', jp: 'zi1 maa3', stdEx: '开玩笑而已。', cantEx: '讲笑之嘛。' },
