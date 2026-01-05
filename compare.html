@@ -473,6 +473,11 @@
             const filtered = db.filter(item => item.cat === category);
             render(filtered);
         }
+        //Scroll to top
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
     }
 
     // 语音播放功能 (核心)

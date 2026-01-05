@@ -268,7 +268,7 @@
             margin: 0 auto;
             padding: 0 0.5rem;
             display: flex;
-            flex-direction: column; /* Changed to column to stack elements */
+            flex-direction: column;
             align-items: center;
             gap: 1rem;
         }
@@ -339,7 +339,6 @@
 <div id="toast">正在播放...</div>
 
 <script>
-    // 完整数据源：包含文档中所有条目，并补充了拼音和例句
     const data = [
         // 1. 工作
         { cat: 'work', slang: '老细', jp: 'lou5 sai3', mean: '上司、Boss。', ex: '老细今日心情唔好，大家小心啲。' },
@@ -471,6 +470,12 @@
                 </div>
             `;
             grid.appendChild(card);
+
+            //Scroll to top
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
         });
     }
 
