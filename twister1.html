@@ -599,9 +599,9 @@
                 return;
             }
 
-            //disable button
-            btn.disabled= true;
-            btn.textContent = "播放中...";
+            // disable button
+            btn.disabled = true;
+            btn.innerHTML = "播放中...";
 
             // Create new audio element with the web URL
             currentAudio = new Audio(url);
@@ -612,9 +612,9 @@
                 alert(`无法播放音频文件。请检查URL是否正确：${url}`);
             });
 
-            //enable button
-            btn.disabled= false;
-            btn.textContent = "播放"
+            // enable button
+            btn.disabled = false;
+            btn.innerHTML = "播放"
         }
     </script>
 
