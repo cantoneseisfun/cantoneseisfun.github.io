@@ -853,7 +853,6 @@
             
             // Get the URL for this twister
             const url = audioUrls[number];
-            const oldText = btn.innerHTML;
             
             if (!url) {
                 alert(`音频文件 ${number} 的URL未配置。`);
@@ -861,6 +860,7 @@
             }
 
             // disable the button
+            const oldText = btn.innerHTML;
             btn.disabled = true;
             btn.innerHTML = "播放中...";
 
