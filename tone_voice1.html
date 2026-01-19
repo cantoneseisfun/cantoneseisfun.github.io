@@ -1,0 +1,914 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta name="x-poe-datastore-behavior" content="local_only"><meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline' 'unsafe-eval' data: blob: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://code.jquery.com https://unpkg.com https://d3js.org https://threejs.org https://cdn.plot.ly https://stackpath.bootstrapcdn.com https://maps.googleapis.com https://cdn.tailwindcss.com https://ajax.googleapis.com https://kit.fontawesome.com https://cdn.datatables.net https://maxcdn.bootstrapcdn.com https://code.highcharts.com https://tako-static-assets-production.s3.amazonaws.com https://www.youtube.com https://fonts.googleapis.com https://fonts.gstatic.com https://pfst.cf2.poecdn.net https://puc.poecdn.net https://i.imgur.com https://wikimedia.org https://*.icons8.com https://*.giphy.com https://picsum.photos https://images.unsplash.com; frame-src 'self' https://www.youtube.com https://trytako.com; child-src 'self'; manifest-src 'self'; worker-src 'self'; upgrade-insecure-requests; block-all-mixed-content;">
+  <meta charset="UTF-8">
+  <title>九声六调发音</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <style>
+    :root {
+      color-scheme: light dark;
+      --bg: #F5F5F0;
+      --fg: #111827;
+      --subtle: #6b7280;
+      --border: #e5e7eb;
+      --accent: #2563eb;
+      --accent-soft: #dbeafe;
+      --accent-strong: #1d4ed8;
+      --btn-bg: #ffffff;
+      --btn-border: #d1d5db;
+      --btn-hover: #f3f4f6;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #020617;
+        --fg: #e5e7eb;
+        --subtle: #9ca3af;
+        --border: #1f2933;
+        --accent-soft: #1d3551;
+        --accent-strong: #dbeafe;
+        --btn-bg: #020617;
+        --btn-border: #4b5563;
+        --btn-hover: #111827;
+      }
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: var(--bg);
+      color: var(--fg);
+      line-height: 1.6;
+    }
+
+    .page {
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 0.75rem 1rem 1.5rem;
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: linear-gradient(to bottom, var(--bg) 80%, transparent);
+      backdrop-filter: blur(10px);
+      padding-bottom: 0.35rem;
+    }
+
+    h1 {
+      font-size: 1.8rem;
+      margin: 0.25rem 0 0.1rem;
+      font-weight: 700;
+    }
+
+    .subtitle {
+      font-size: 0.9rem;
+      color: var(--subtle);
+      margin-bottom: 0.5rem;
+    }
+
+    .card {
+      border-radius: 0.75rem;
+      border: 1px solid var(--border);
+      padding: 0.75rem 0.9rem;
+      margin-bottom: 0.9rem;
+      background: rgba(255,255,255,0.9);
+    }
+
+    @media (prefers-color-scheme: dark) {
+      .card {
+        background: rgba(15,23,42,0.96);
+      }
+    }
+
+    .note {
+      font-size: 18px;
+      color: var(--subtle);
+    }
+
+    .note ul {
+      margin: 0.35rem 0 0;
+      padding-left: 1.1rem;
+    }
+
+    .note li {
+      margin: 0.15rem 0;
+    }
+
+    .group-title-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 0.5rem;
+      margin: 0.75rem 0 0.35rem;
+    }
+
+    .group-name {
+      font-weight: 600;
+      font-size: 1.2rem;
+    }
+
+    .legend {
+      font-size: 1.0rem;
+      color: var(--subtle);
+    }
+
+    /* 手机友好的“卡片式网格”布局 */
+    .char-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 0.6rem;
+    }
+
+    @media (min-width: 640px) {
+      .char-grid {
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+      }
+    }
+
+    @media (min-width: 900px) {
+      .char-grid {
+        grid-template-columns: repeat(9, minmax(0, 1fr));
+      }
+    }
+
+    .char-card {
+      border-radius: 0.7rem;
+      border: 1px solid var(--border);
+      padding: 0.45rem 0.35rem 0.5rem;
+      text-align: center;
+      background: rgba(255,255,255,0.9);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.12rem;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      .char-card {
+        background: rgba(15,23,42,0.98);
+      }
+    }
+
+    .char {
+      font-size: 1.5rem;
+      font-weight: 600;
+      line-height: 1.3;
+    }
+
+    .jyutping {
+      font-family: "SF Mono", Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size: 1.1rem;
+      color: var(--subtle);
+    }
+
+    .tone {
+      font-size: 1.1rem;
+      color: var(--subtle);
+    }
+
+    .tone-label {
+      font-size: 0.9rem;
+      opacity: 0.7;
+    }
+
+    .play-btn {
+      margin-top: 0.1rem;
+      padding: 0.18rem 0.55rem;
+      font-size: 1.2rem;
+      border-radius: 999px;
+      border: 2px solid var(--btn-border);
+      background-color: var(--btn-bg);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+      color: var(--accent-strong);
+      white-space: nowrap;
+      user-select: none;
+    }
+
+    .play-btn:hover {
+      background-color: var(--btn-hover);
+    }
+
+    .play-icon {
+      width: 0;
+      height: 0;
+      border-top: 4px solid transparent;
+      border-bottom: 4px solid transparent;
+      border-left: 6px solid var(--accent-strong);
+    }
+
+    .play-all-row {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 0.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .play-all-btn {
+      font-size: 1.2rem;
+      padding: 0.2rem 0.65rem;
+      border-radius: 999px;
+      border: 2px solid var(--btn-border);
+      background-color: var(--btn-bg);
+      color: var(--accent-strong);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+      cursor: pointer;
+    }
+
+    .play-all-btn:hover {
+      filter: brightness(0.97);
+    }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      border: 0;
+    }
+
+    .footer {
+      margin-top: 1rem;
+      font-size: 0.75rem;
+      color: var(--subtle);
+      text-align: center;
+    }
+
+    /* Header CSS */
+    #navbar {
+      background: var(--bg);
+      padding: 0.75rem 1rem;
+      position: sticky;
+      top: 0;
+      z-index: 30;
+      max-width: 1080px;
+      margin: 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+    }
+
+    #navbar nav {
+      position: absolute;
+      right: 2rem;
+      display: flex;
+      gap: 20px;
+    }
+
+    #navbar .title {
+      color: var(--fg);
+      font-size: 1.8rem;
+      font-weight: 700;
+      margin-left: 0;
+    }
+
+    #navbar a {
+      text-decoration: none;
+      color: var(--fg);
+      font-size: 1.0rem;
+      font-weight: 500;
+      margin-left: 0;
+    }
+
+    .home-icon {
+      width: 43px;
+      height: 43px;
+      background: gba(255,255,255,0.2);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      border: 2px solid;
+    }
+        
+    .home-icon:hover {
+      background: lightgreen;
+      border-color: lightgreen;
+      transform: translateY(-2px);
+    }
+        
+    .home-icon svg {
+      width: 43px;
+      height: 43px;
+      fill: #0ea5e9;
+    }
+
+  </style>
+</head>
+<body>
+  <div class="page">
+    
+  <header id="navbar">
+    <div class="title">九声六调发音</div>
+      <nav>
+        <div class="logo-section">
+          <a href="https://cantogo.github.io" class="home-icon" title="轻轻松松、怏怏乐乐学粤语">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+              <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"></path>
+            </svg>
+          </a>
+        </div>
+      </nav>
+  </header>
+
+    <section class="card" aria-label="使用说明">
+      <div class="note">
+        提示：点击「第 X 声」按钮朗读粤语发音。
+      </div>
+    </section>
+
+    <!-- 第一组 -->
+    <section class="card" aria-label="第一组">
+      <div class="group-title-row">
+        <div class="group-name">第一组</div>
+        <div class="legend">
+          显示：汉字 · 粤拼 · 声调
+        </div>
+      </div>
+
+      <div class="play-all-row">
+        <button class="play-all-btn" onclick="playAudio(this,1)">
+          <span class="play-icon"></span>
+          全组播放
+        </button>
+      </div>
+
+      <div class="char-grid" id="group1">
+        <!-- 师 si1 55 -->
+        <div class="char-card" data-char="师">
+          <div class="char">师</div>
+          <div class="jyutping">si1</div>
+          <div class="tone">
+            <span class="tone-label">调值</span> 55
+          </div>
+          <button class="play-btn" onclick="playAudio(this,2)">
+            <span class="play-icon"></span>
+            第1声
+          </button>
+        </div>
+
+        <!-- 史 si2 35 -->
+        <div class="char-card" data-char="史">
+          <div class="char">史</div>
+          <div class="jyutping">si2</div>
+          <div class="tone">
+            <span class="tone-label">调值</span> 35
+          </div>
+          <button class="play-btn" onclick="playAudio(this,3)">
+            <span class="play-icon"></span>
+            第2声
+          </button>
+        </div>
+
+        <!-- 试 si3 33 -->
+        <div class="char-card" data-char="试">
+          <div class="char">试</div>
+          <div class="jyutping">si3</div>
+          <div class="tone">
+            <span class="tone-label">调值</span> 33
+          </div>
+          <button class="play-btn" onclick="playAudio(this,4)">
+            <span class="play-icon"></span>
+            第3声
+          </button>
+        </div>
+
+        <!-- 时 si4 21 -->
+        <div class="char-card" data-char="时">
+          <div class="char">时</div>
+          <div class="jyutping">si4</div>
+          <div class="tone">
+            <span class="tone-label">调值</span> 21
+          </div>
+          <button class="play-btn" onclick="playAudio(this,5)">
+            <span class="play-icon"></span>
+            第4声
+          </button>
+        </div>
+
+        <!-- 市 si5 13 -->
+        <div class="char-card" data-char="市">
+          <div class="char">市</div>
+          <div class="jyutping">si5</div>
+          <div class="tone">
+            <span class="tone-label">调值</span> 13
+          </div>
+          <button class="play-btn" onclick="playAudio(this,6)">
+            <span class="play-icon"></span>
+            第5声
+          </button>
+        </div>
+
+        <!-- 事 si6 22 -->
+        <div class="char-card" data-char="事">
+          <div class="char">事</div>
+          <div class="jyutping">si6</div>
+          <div class="tone">
+            <span class="tone-label">调值</span> 22
+          </div>
+          <button class="play-btn" onclick="playAudio(this,7)">
+            <span class="play-icon"></span>
+            第6声
+          </button>
+        </div>
+
+        <!-- 识 sik1 5 -->
+        <div class="char-card" data-char="识">
+          <div class="char">识</div>
+          <div class="jyutping">sik1</div>
+          <div class="tone">
+            <span class="tone-label">调值</span> 5
+          </div>
+          <button class="play-btn" onclick="playAudio(this,8)">
+            <span class="play-icon"></span>
+            第7声
+          </button>
+        </div>
+
+        <!-- 锡 sek3 3 -->
+        <div class="char-card" data-char="锡">
+          <div class="char">锡</div>
+          <div class="jyutping">sek3</div>
+          <div class="tone">
+            <span class="tone-label">调值</span> 3
+          </div>
+          <button class="play-btn" onclick="playAudio(this,9)">
+            <span class="play-icon"></span>
+            第8声
+          </button>
+        </div>
+
+        <!-- 食 sik6 2 -->
+        <div class="char-card" data-char="食">
+          <div class="char">食</div>
+          <div class="jyutping">sik6</div>
+          <div class="tone">
+            <span class="tone-label">调值</span> 2
+          </div>
+          <button class="play-btn" onclick="playAudio(this,10)">
+            <span class="play-icon"></span>
+            第9声
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 第二组 -->
+    <section class="card" aria-label="第二组">
+      <div class="group-title-row">
+        <div class="group-name">第二组</div>
+        <div class="legend">
+          显示：汉字 · 粤拼 · 声调
+        </div>
+      </div>
+
+      <div class="play-all-row">
+        <button class="play-all-btn" onclick="playAudio(this,11)">
+          <span class="play-icon"></span>
+          全组播放
+        </button>
+      </div>
+
+      <div class="char-grid" id="group2">
+        <!-- 分 fan1 55 -->
+        <div class="char-card" data-char="分">
+          <div class="char">分</div>
+          <div class="jyutping">fan1</div>
+          <div class="tone">
+            <span class="tone-label">调值</span> 55
+          </div>
+          <button class="play-btn" onclick="playAudio(this,12)">
+            <span class="play-icon"></span>
+            第1声
+          </button>
+        </div>
+
+        <!-- 粉 fan2 35 -->
+        <div class="char-card" data-char="粉">
+          <div class="char">粉</div>
+          <div class="jyutping">fan2</div>
+          <div class="tone">
+            <span class="tone-label">调值</span> 35
+          </div>
+          <button class="play-btn" onclick="playAudio(this,13)">
+            <span class="play-icon"></span>
+            第2声
+          </button>
+        </div>
+
+        <!-- 训 fan3 33 -->
+        <div class="char-card" data-char="训">
+          <div class="char">训</div>
+          <div class="jyutping">fan3</div>
+          <div class="tone">
+            <span class="tone-label">调值</span> 33
+          </div>
+          <button class="play-btn" onclick="playAudio(this,14)">
+            <span class="play-icon"></span>
+            第3声
+          </button>
+        </div>
+
+        <!-- 坟 fan4 21 -->
+        <div class="char-card" data-char="坟">
+          <div class="char">坟</div>
+          <div class="jyutping">fan4</div>
+          <div class="tone">
+            <span class="tone-label">调值</span> 21
+          </div>
+          <button class="play-btn" onclick="playAudio(this,15)">
+            <span class="play-icon"></span>
+            第4声
+          </button>
+        </div>
+
+        <!-- 愤 fan5 13 -->
+        <div class="char-card" data-char="愤">
+          <div class="char">愤</div>
+          <div class="jyutping">fan5</div>
+          <div class="tone">
+            <span class="tone-label">调值</span> 13
+          </div>
+          <button class="play-btn" onclick="playAudio(this,16)">
+            <span class="play-icon"></span>
+            第5声
+          </button>
+        </div>
+
+        <!-- 份 fan6 22 -->
+        <div class="char-card" data-char="份">
+          <div class="char">份</div>
+          <div class="jyutping">fan6</div>
+          <div class="tone">
+            <span class="tone-label">调值</span> 22
+          </div>
+          <button class="play-btn" onclick="playAudio(this,17)">
+            <span class="play-icon"></span>
+            第6声
+          </button>
+        </div>
+
+        <!-- 忽 fat1 5 -->
+        <div class="char-card" data-char="忽">
+          <div class="char">忽</div>
+          <div class="jyutping">fat1</div>
+          <div class="tone">
+            <span class="tone-label">调值</span> 5
+          </div>
+          <button class="play-btn" onclick="playAudio(this,18)">
+            <span class="play-icon"></span>
+            第7声
+          </button>
+        </div>
+
+        <!-- 发 faat3 3 -->
+        <div class="char-card" data-char="发">
+          <div class="char">发</div>
+          <div class="jyutping">faat3</div>
+          <div class="tone">
+            <span class="tone-label">调值</span> 3
+          </div>
+          <button class="play-btn" onclick="playAudio(this,19)">
+            <span class="play-icon"></span>
+            第8声
+          </button>
+        </div>
+
+        <!-- 佛 fat6 2 -->
+        <div class="char-card" data-char="佛">
+          <div class="char">佛</div>
+          <div class="jyutping">fat6</div>
+          <div class="tone">
+            <span class="tone-label">调值</span> 2
+          </div>
+          <button class="play-btn" onclick="playAudio(this,20)">
+            <span class="play-icon"></span>
+            第9声
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 第三组 -->
+    <section class="card" aria-label="第三组">
+      <div class="group-title-row">
+        <div class="group-name">第三组</div>
+        <div class="legend">
+          显示：汉字 · 粤拼 · 声调
+        </div>
+      </div>
+
+      <div class="play-all-row">
+        <button class="play-all-btn" onclick="playAudio(this,21)">
+          <span class="play-icon"></span>
+          全组播放
+        </button>
+      </div>
+
+      <div class="char-grid" id="group3">
+        <!-- 三 saam1 55 -->
+        <div class="char-card" data-char="三">
+          <div class="char">三</div>
+          <div class="jyutping">saam1</div>
+          <div class="tone">
+            <span class="tone-label">调值</span> 55
+          </div>
+          <button class="play-btn" onclick="playAudio(this,22)">
+            <span class="play-icon"></span>
+            第1声
+          </button>
+        </div>
+
+        <!-- 九 gau2 35 -->
+        <div class="char-card" data-char="九">
+          <div class="char">九</div>
+          <div class="jyutping">gau2</div>
+          <div class="tone">
+            <span class="tone-label">调值</span> 35
+          </div>
+          <button class="play-btn" onclick="playAudio(this,23)">
+            <span class="play-icon"></span>
+            第2声
+          </button>
+        </div>
+
+        <!-- 四 sei3 33 -->
+        <div class="char-card" data-char="四">
+          <div class="char">四</div>
+          <div class="jyutping">sei3</div>
+          <div class="tone">
+            <span class="tone-label">调值</span> 33
+          </div>
+          <button class="play-btn" onclick="playAudio(this,24)">
+            <span class="play-icon"></span>
+            第3声
+          </button>
+        </div>
+
+        <!-- 零 ling4 21 -->
+        <div class="char-card" data-char="零">
+          <div class="char">零</div>
+          <div class="jyutping">ling4</div>
+          <div class="tone">
+            <span class="tone-label">调值</span> 21
+          </div>
+          <button class="play-btn" onclick="playAudio(this,25)">
+            <span class="play-icon"></span>
+            第4声
+          </button>
+        </div>
+
+        <!-- 五 ng5 13 -->
+        <div class="char-card" data-char="五">
+          <div class="char">五</div>
+          <div class="jyutping">ng5</div>
+          <div class="tone">
+            <span class="tone-label">调值</span> 13
+          </div>
+          <button class="play-btn" onclick="playAudio(this,26)">
+            <span class="play-icon"></span>
+            第5声
+          </button>
+        </div>
+
+        <!-- 二 ji6 22 -->
+        <div class="char-card" data-char="二">
+          <div class="char">二</div>
+          <div class="jyutping">ji6</div>
+          <div class="tone">
+            <span class="tone-label">调值</span> 22
+          </div>
+          <button class="play-btn" onclick="playAudio(this,27)">
+            <span class="play-icon"></span>
+            第6声
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 第四组 -->
+    <section class="card" aria-label="第四组">
+      <div class="group-title-row">
+        <div class="group-name">第四组</div>
+        <div class="legend">
+          显示：汉字 · 粤拼 · 声调
+        </div>
+      </div>
+
+      <div class="play-all-row">
+        <button class="play-all-btn" onclick="playAudio(this,28)">
+          <span class="play-icon"></span>
+          全组播放
+        </button>
+      </div>
+
+      <div class="char-grid" id="group4">
+        <!-- 三 saam1 55 -->
+        <div class="char-card" data-char="三">
+          <div class="char">三</div>
+          <div class="jyutping">saam1</div>
+          <div class="tone">
+            <span class="tone-label">调值</span> 55
+          </div>
+          <button class="play-btn" onclick="playAudio(this,29)">
+            <span class="play-icon"></span>
+            第1声
+          </button>
+        </div>
+
+        <!-- 碗 wun2 35 -->
+        <div class="char-card" data-char="碗">
+          <div class="char">碗</div>
+          <div class="jyutping">wun2</div>
+          <div class="tone">
+            <span class="tone-label">调值</span> 35
+          </div>
+          <button class="play-btn" onclick="playAudio(this,30)">
+            <span class="play-icon"></span>
+            第2声
+          </button>
+        </div>
+
+        <!-- 细 sai3 33 -->
+        <div class="char-card" data-char="细">
+          <div class="char">细</div>
+          <div class="jyutping">sai3</div>
+          <div class="tone">
+            <span class="tone-label">调值</span> 33
+          </div>
+          <button class="play-btn" onclick="playAudio(this,31)">
+            <span class="play-icon"></span>
+            第3声
+          </button>
+        </div>
+
+        <!-- 牛 ngau4 21 -->
+        <div class="char-card" data-char="牛">
+          <div class="char">牛</div>
+          <div class="jyutping">ngau4</div>
+          <div class="tone">
+            <span class="tone-label">调值</span> 21
+          </div>
+          <button class="play-btn" onclick="playAudio(this,32)">
+            <span class="play-icon"></span>
+            第4声
+          </button>
+        </div>
+
+        <!-- 腩 naam5 13 -->
+        <div class="char-card" data-char="腩">
+          <div class="char">腩</div>
+          <div class="jyutping">naam5</div>
+          <div class="tone">
+            <span class="tone-label">调值</span> 13
+          </div>
+          <button class="play-btn" onclick="playAudio(this,33)">
+            <span class="play-icon"></span>
+            第5声
+          </button>
+        </div>
+
+        <!-- 面 min6 22 -->
+        <div class="char-card" data-char="面">
+          <div class="char">面</div>
+          <div class="jyutping">min6</div>
+          <div class="tone">
+            <span class="tone-label">调值</span> 22
+          </div>
+          <button class="play-btn" onclick="playAudio(this,34)">
+            <span class="play-icon"></span>
+            第6声
+          </button>
+        </div>
+      </div>
+    </section>
+
+  </div>
+  
+    <script>
+        // Audio file URLs mapping
+        // Replace these URLs with your actual audio file URLs
+        const audioUrls = {
+            1: 'https://cantogo.github.io/voice/voice_1.mp3',
+            2: 'https://cantogo.github.io/voice/voice_2.mp3',
+            3: 'https://cantogo.github.io/voice/voice_3.mp3',
+            4: 'https://cantogo.github.io/voice/voice_4.mp3',
+            5: 'https://cantogo.github.io/voice/voice_5.mp3',
+            6: 'https://cantogo.github.io/voice/voice_6.mp3',
+            7: 'https://cantogo.github.io/voice/voice_7.mp3',
+            8: 'https://cantogo.github.io/voice/voice_8.mp3',
+            9: 'https://cantogo.github.io/voice/voice_9.mp3',
+            10: 'https://cantogo.github.io/voice/voice_10.mp3',
+            11: 'https://cantogo.github.io/voice/voice_11.mp3',
+            12: 'https://cantogo.github.io/voice/voice_12.mp3',
+            13: 'https://cantogo.github.io/voice/voice_13.mp3',
+            14: 'https://cantogo.github.io/voice/voice_14.mp3',
+            15: 'https://cantogo.github.io/voice/voice_15.mp3',
+            16: 'https://cantogo.github.io/voice/voice_16.mp3',
+            17: 'https://cantogo.github.io/voice/voice_17.mp3',
+            18: 'https://cantogo.github.io/voice/voice_18.mp3',
+            19: 'https://cantogo.github.io/voice/voice_19.mp3',
+            20: 'https://cantogo.github.io/voice/voice_20.mp3',
+            21: 'https://cantogo.github.io/voice/voice_21.mp3',
+            22: 'https://cantogo.github.io/voice/voice_22.mp3',
+            23: 'https://cantogo.github.io/voice/voice_23.mp3',
+            24: 'https://cantogo.github.io/voice/voice_24.mp3',
+            25: 'https://cantogo.github.io/voice/voice_25.mp3',
+            26: 'https://cantogo.github.io/voice/voice_26.mp3',
+            27: 'https://cantogo.github.io/voice/voice_27.mp3',
+            28: 'https://cantogo.github.io/voice/voice_28.mp3',
+            29: 'https://cantogo.github.io/voice/voice_29.mp3',
+            30: 'https://cantogo.github.io/voice/voice_30.mp3',
+            31: 'https://cantogo.github.io/voice/voice_31.mp3',
+            32: 'https://cantogo.github.io/voice/voice_32.mp3',
+            33: 'https://cantogo.github.io/voice/voice_33.mp3',
+            34: 'https://cantogo.github.io/voice/voice_34.mp3'
+          };
+
+        // Create an Audio object for reuse
+        let currentAudio = null;
+
+        function playAudio(btn, number) {
+            // Stop any currently playing audio
+            if (currentAudio) {
+                currentAudio.pause();
+                currentAudio.currentTime = 0;
+            }
+            
+            // Get the URL for this twister
+            const url = audioUrls[number];
+            
+            if (!url) {
+                alert(`音频文件 ${number} 的URL未配置。`);
+                return;
+            }
+
+            // disable the button
+            const oldText = btn.textContent;
+            btn.disabled = true;
+            btn.innerHTML = "播放中...";
+
+            // Create new audio element with the web URL
+            currentAudio = new Audio(url);
+            
+            // Play the audio
+            currentAudio.play().catch(error => {
+                console.error('Error playing audio:', error);
+                alert(`无法播放音频文件。请检查URL是否正确：${url}`);
+            });
+
+            // enable the button after playing the audio
+            currentAudio.addEventListener('ended', function() {
+                btn.disabled = false;
+                btn.innerHTML = oldText;
+            });            
+
+        }
+    </script>
+
+    <script>
+        let lastScrollTop = 0;
+        const navbar = document.getElementById("navbar");
+        const navbarHeight = navbar.offsetHeight;
+
+        window.addEventListener("scroll", function() {
+            // Get current scroll position
+            let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            
+            // Prevent negative scrolling (bounce effect on mobile)
+            if (scrollTop < 0) {
+                scrollTop = 0;
+            }
+
+            if (scrollTop > lastScrollTop) {
+                // User is scrolling DOWN
+                // Move the navbar up by its height (negative top value)
+                navbar.style.top = `-${navbarHeight}px`;
+            } else {
+                // User is scrolling UP
+                // Reset top to 0
+                navbar.style.top = "0";
+            }
+            
+            // Update last scroll position
+            lastScrollTop = scrollTop;
+        });
+    </script>
+
+</body></html>
