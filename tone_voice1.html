@@ -841,42 +841,59 @@
             34: 'https://cantogo.github.io/voice/voice_34.mp3'
           };
 
-        // Create an Audio object for reuse
-        let currentAudio = null;
+// Variable to store the currently playing audio object
+let currentAudio = null;
+// Variable to store the button associated with the currently playing audio
+let currentBtn = null;
+// Variable to store the original text of the button
+let currentOldText = null;
 
         function playAudio(btn, number) {
             // Stop any currently playing audio
             if (currentAudio) {
                 currentAudio.pause();
                 currentAudio.currentTime = 0;
+
+                // Reset the previous button state immediately
+               if (currentBtn) {
+                currentBtn.disabled = false;
+                currentBtn.innerHTML = currentOldText;
+               }
             }
             
-            // Get the URL for this twister
-            const url = audioUrls[number];
-            
-            if (!url) {
-                alert(`音频文件 ${number} 的URL未配置。`);
-                return;
-            }
+    // 2. Setup the new audio
+    const audio = new Audio(url);
+    const oldText = btn.innerHTML; // Store current button text
 
-            // disable the button
-            const oldText = btn.textContent;
-            btn.disabled = true;
-            btn.innerHTML = "播放中...";
+    // Update global variables to the new audio context
+    currentAudio = audio;
+    currentBtn = btn;
+    currentOldText = oldText;
 
-            // Create new audio element with the web URL
-            currentAudio = new Audio(url);
-            
-            // Play the audio
-            currentAudio.play().catch(error => {
-                console.error('Error playing audio:', error);
-                alert(`无法播放音频文件。请检查URL是否正确：${url}`);
-            });
+    // Update UI for the new button
+    btn.disabled = true;
+    btn.innerHTML = "Playing..."; // Or any loading text
 
-            // enable the button after playing the audio
-            currentAudio.addEventListener('ended', function() {
-                btn.disabled = false;
-                btn.innerHTML = oldText;
+    // 3. Play the audio
+    audio.play().catch(error => {
+        console.error('Error playing audio:', error);
+        alert(`无法播放音频文件。请检查URL是否正确：${url}`);
+        
+        // Reset button on error
+        btn.disabled = false;
+        btn.innerHTML = oldText;
+        currentAudio = null;
+        currentBtn = null;
+    });
+
+    // 4. Handle when audio ends naturally
+    audio.addEventListener('ended', function() {
+        // Only reset if this is still the current audio (safety check)
+        if (currentAudio === audio) {
+            btn.disabled = false;
+            btn.innerHTML = oldText;
+            currentAudio = null;
+            currentBtn = null;
             });            
 
         }
