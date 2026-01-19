@@ -612,7 +612,7 @@
                 alert(`无法播放音频文件。请检查URL是否正确：${url}`);
             });
 
-            audio.addEventListener('ended', function() {
+            currentAudio.addEventListener('ended', function() {
                 btn.disabled = false;
                 btn.innerHTML = "播放";
             });            
