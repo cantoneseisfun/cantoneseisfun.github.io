@@ -253,7 +253,7 @@
                 <div class="twister-header">
                     <span class="twister-index">1.</span>
                     <img src="\image\green_new_icon.gif" alt="New Icon" style="width:auto; height:45px;">
-                    <button class="play" onclick="playAudio(1)">
+                    <button class="play" id="btn_1" onclick="playAudio(1)">
                         播放
                     </button>
                 </div>
@@ -602,11 +602,15 @@
             // Create new audio element with the web URL
             currentAudio = new Audio(url);
             
+            document.getElementById("btn_"+number).disabled = true;
+
             // Play the audio
             currentAudio.play().catch(error => {
                 console.error('Error playing audio:', error);
                 alert(`无法播放音频文件。请检查URL是否正确：${url}`);
             });
+
+            document.getElementById("btn_"+number).disabled = false;
         }
     </script>
 
