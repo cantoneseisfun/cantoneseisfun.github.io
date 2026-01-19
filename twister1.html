@@ -602,18 +602,15 @@
             // Create new audio element with the web URL
             currentAudio = new Audio(url);
             
-            // document.getElementById("btn_"+number).disabled = true;
-            const button = document.getElementById("btn_"+number);
-            // Toggle the disabled property
-            button.disabled = true; 
-
+            document.getElementById("btn_1").disabled = true;
+            
             // Play the audio
             currentAudio.play().catch(error => {
                 console.error('Error playing audio:', error);
                 alert(`无法播放音频文件。请检查URL是否正确：${url}`);
             });
 
-            button.disabled = false; 
+            document.getElementById("btn_1").disabled = false;
         }
     </script>
 
