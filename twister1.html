@@ -556,32 +556,8 @@
 </div>
 
     <script>
-        // Audio file URLs mapping
-        // Replace these URLs with your actual audio file URLs
-        const audioUrls = {
-            1: 'https://cantogo.github.io/voice/twister_1.mp3',
-            2: 'https://cantogo.github.io/voice/twister_2.mp3',
-            3: 'https://cantogo.github.io/voice/twister_3.mp3',
-            4: 'https://cantogo.github.io/voice/twister_4.mp3',
-            5: 'https://cantogo.github.io/voice/twister_5.mp3',
-            6: 'https://cantogo.github.io/voice/twister_6.mp3',
-            7: 'https://cantogo.github.io/voice/twister_7.mp3',
-            8: 'https://cantogo.github.io/voice/twister_8.mp3',
-            9: 'https://cantogo.github.io/voice/twister_9.mp3',
-            10: 'https://cantogo.github.io/voice/twister_10.mp3',
-            11: 'https://cantogo.github.io/voice/twister_11.mp3',
-            12: 'https://cantogo.github.io/voice/twister_12.mp3',
-            13: 'https://cantogo.github.io/voice/twister_13.mp3',
-            14: 'https://cantogo.github.io/voice/twister_14.mp3',
-            15: 'https://cantogo.github.io/voice/twister_15.mp3',
-            16: 'https://cantogo.github.io/voice/twister_16.mp3',
-            17: 'https://cantogo.github.io/voice/twister_17.mp3',
-            18: 'https://cantogo.github.io/voice/twister_18.mp3',
-            19: 'https://cantogo.github.io/voice/twister_19.mp3',
-            20: 'https://cantogo.github.io/voice/twister_20.mp3'
-        };
 
-        // Create objects for reuse
+// Create objects for reuse
         let currentAudio = null;
         let currentButton = null;
         let currentOldText = null;
@@ -598,9 +574,9 @@
                 }
             }
             
-            // Get the URL for this twister
-            // const url = audioUrls[number];
-            const url = "https://cantogo.github.io/voice/twister_" + number + ".mp3";
+            // Get the URL for the audio file
+            // const url = "https://cantogo.github.io/voice/twister_" + number + ".mp3";
+            const url = "/voice/twister_" + number + ".mp3";
 
             if (!url) {
                 alert(`音频文件 ${number} 的URL未配置。`);
