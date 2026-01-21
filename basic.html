@@ -76,6 +76,8 @@
             transition: background 0.3s;
             border-bottom: 1px solid var(--border);
             padding-bottom: 0.75rem;
+            max-width: 1200px;
+            margin: 0 auto 10px auto;
         }
 
         h1 {
@@ -261,7 +263,7 @@
 
         .header-content {
             max-width: 1200px;
-            margin: 0 auto;
+            margin: 20px auto;
             padding: 0 0.5rem;
             display: flex;
             flex-direction: column;
@@ -326,32 +328,25 @@
         </div>
     </main>
 
-    <footer>
-        <p>Created for fun. 享受學習的過程！</p>
-    </footer>
-
-    <div id="toast">🔊 正在播放聲音...</div>
-
     <script>
         // Data Source - 40 Items Total
-        const data = [
-            {emoji: "🙏", word: "唔該", jyutping: "m4 goi1", meaning: "謝謝 / 麻煩了", desc: "萬能詞！可用於表達請求或感謝，這些語句簡潔而有禮。", cantno: 1},
-            {emoji: "👌", word: "搞掂", jyutping: "gaau2 dim6", meaning: "完成了", desc: "事情圓滿解決，非常有成就感的一個詞。", cantno: 2},
-            {emoji: "🥰", word: "得意", jyutping: "dak1 ji3", meaning: "可愛 / 有趣", desc: "看到可愛的小動物時，忍不住會說這句。", cantno: 3},
-            {emoji: "🤷", word: "是但", jyutping: "si6 daan6", meaning: "隨便", desc: "最佛系的詞，當你不想做決定時的最佳答案。", cantno: 4},
-            {emoji: "🍚", word: "食飯", jyutping: "sik6 faan6", meaning: "吃飯", desc: "通常指享用正餐，是上班族最期待的時刻之一。", cantno: 5},
-            {emoji: "🧾", word: "埋單", jyutping: "maai4 daan1", meaning: "結帳", desc: "吃飽後舉手示意，帥氣地說出這兩個字。", cantno: 6},
-            {emoji: "😋", word: "好味", jyutping: "hou2 mei6", meaning: "好吃", desc: "對廚師或請客的人最好的讚美。", cantno: 7},
-            {emoji: "☀️", word: "早晨", jyutping: "zou2 san4", meaning: "早安", desc: "早上見面必說，比 Hello 更親切有活力。", cantno: 8},
-            {emoji: "🌙", word: "早抖", jyutping: "zou2 tau2", meaning: "晚安", desc: "祝對方早點休息。「抖」就是休息的意思。", cantno: 9},
-            {emoji: "👋", word: "拜拜", jyutping: "baai1 baai3", meaning: "再見", desc: "語調通常比較高，聽起來很輕鬆愉快。", cantno: 10},
-            {emoji: "🤣", word: "講笑", jyutping: "gong2 siu3", meaning: "開玩笑", desc: "怕對方當真生氣時，趕緊補上這句。", cantno: 11},
-            {emoji: "🚌", word: "搭車", jyutping: "daap3 ce1", meaning: "坐車", desc: "各種交通工具通用，搭巴士、搭地鐵都行。", cantno: 12},
-            {emoji: "🛍️", word: "行街", jyutping: "haang4 gaai1", meaning: "逛街", desc: "在街上漫步購物，感受城市脈搏。", cantno: 13},
-            {emoji: "🏠", word: "返屋企", jyutping: "faan1 uk1 kei2", meaning: "回家", desc: "一天中最溫馨的時刻，回到自己的小窩。", cantno: 14},
-            {emoji: "💤", word: "訓覺", jyutping: "fan3 gaau3", meaning: "睡覺", desc: "人生大事。累的時候只想立刻去訓覺。", cantno: 15},
-            {emoji: "👍", word: "好正", jyutping: "hou2 zeng3", meaning: "超棒 / 極好", desc: "形容食物、體驗或美女帥哥都可以用。", cantno: 16},
-
+        const data = [            
+            {emoji: "🙏", word: "唔该", jyutping: "m4 goi1", meaning: "谢谢 / 麻烦了", desc: "万能词！可用于表达请求或感谢，这些语句简洁而有礼。", cantno: 1},
+            {emoji: "👌", word: "搞掂", jyutping: "gaau2 dim6", meaning: "完成了", desc: "事情圆满解决，非常有成就感的一个词。", cantno: 2},
+            {emoji: "🥰", word: "得意", jyutping: "dak1 ji3", meaning: "可爱 / 有趣", desc: "看到可爱的小动物时，忍不住会说这句。", cantno: 3},
+            {emoji: "🤷", word: "是但", jyutping: "si6 daan6", meaning: "随便", desc: "最佛系的词，当你不想做决定时的最佳答案。", cantno: 4},
+            {emoji: "🍚", word: "食饭", jyutping: "sik6 faan6", meaning: "吃饭", desc: "通常指享用正餐，是上班族最期待的时刻之一。", cantno: 5},
+            {emoji: "🧾", word: "埋单", jyutping: "maai4 daan1", meaning: "结账", desc: "吃饱后举手示意，帅气地说出这两个字。", cantno: 6},
+            {emoji: "😋", word: "好味", jyutping: "hou2 mei6", meaning: "好吃", desc: "对厨师或请客的人最好的赞美。", cantno: 7},
+            {emoji: "☀️", word: "早晨", jyutping: "zou2 san4", meaning: "早安", desc: "早上见面必说，比 Hello 更亲切有活力。", cantno: 8},
+            {emoji: "🌙", word: "早抖", jyutping: "zou2 tau2", meaning: "晚安", desc: "祝对方早点休息。「抖」就是休息的意思。", cantno: 9},
+            {emoji: "👋", word: "拜拜", jyutping: "baai1 baai3", meaning: "再见", desc: "语调通常比较高，听起来很轻松愉快。", cantno: 10},
+            {emoji: "🤣", word: "讲笑", jyutping: "gong2 siu3", meaning: "开玩笑", desc: "怕对方当真生气时，赶紧补上这句。", cantno: 11},
+            {emoji: "🚌", word: "乘车", jyutping: "daap3 ce1", meaning: "坐车", desc: "各种交通工具通用，搭巴士、搭地铁都行。", cantno: 12},
+            {emoji: "🛍️", word: "行街", jyutping: "haang4 gaai1", meaning: "逛街", desc: "在街上漫步购物，感受城市脉搏。", cantno: 13},
+            {emoji: "🏠", word: "回家", jyutping: "faan1 uk1 kei2", meaning: "回家", desc: "一天中最温馨的时刻，回到自己的小窝。", cantno: 14},
+            {emoji: "💤", word: "训觉", jyutping: "fan3 gaau3", meaning: "睡觉", desc: "人生大事。累的时候只想立刻去训觉。", cantno: 15},
+            {emoji: "👍", word: "好正", jyutping: "hou2 zeng3", meaning: "超棒 / 极好", desc: "形容食物、体验或美女帅哥都可以用。", cantno: 16},
         ];
 
         const grid = document.getElementById('card-grid');
