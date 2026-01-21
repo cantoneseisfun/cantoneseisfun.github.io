@@ -1,0 +1,398 @@
+<!DOCTYPE html><html lang="zh-HK"><head><meta name="x-poe-datastore-behavior" content="local_only"><meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline' 'unsafe-eval' data: blob: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://code.jquery.com https://unpkg.com https://d3js.org https://threejs.org https://cdn.plot.ly https://stackpath.bootstrapcdn.com https://maps.googleapis.com https://cdn.tailwindcss.com https://ajax.googleapis.com https://kit.fontawesome.com https://cdn.datatables.net https://maxcdn.bootstrapcdn.com https://code.highcharts.com https://tako-static-assets-production.s3.amazonaws.com https://www.youtube.com https://fonts.googleapis.com https://fonts.gstatic.com https://pfst.cf2.poecdn.net https://puc.poecdn.net https://i.imgur.com https://wikimedia.org https://*.icons8.com https://*.giphy.com https://picsum.photos https://images.unsplash.com; frame-src 'self' https://www.youtube.com https://trytako.com; child-src 'self'; manifest-src 'self'; worker-src 'self'; upgrade-insecure-requests; block-all-mixed-content;">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>粵語聲音實驗室 (40詞彙版)</title>
+    <style>
+        :root {
+            --primary-color: #6366f1;
+            --bg-color: #f3f4f6;
+            --card-bg: #ffffff;
+            --text-main: #1f2937;
+            --text-sub: #6b7280;
+            --accent-color: #818cf8;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            padding: 40px 20px;
+            background: linear-gradient(135deg, #e0e7ff 0%, #f3f4f6 100%);
+            border-radius: 0 0 30px 30px;
+            margin-bottom: 40px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            color: var(--primary-color);
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            color: var(--text-sub);
+            max-width: 600px;
+            margin: 0 auto 20px;
+        }
+
+        .quote {
+            font-style: italic;
+            color: var(--accent-color);
+            font-weight: 500;
+        }
+
+        /* Grid Layout */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 20px;
+            padding: 10px;
+        }
+
+        /* Card Styles */
+        .card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: 2px solid transparent;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            border-color: var(--accent-color);
+        }
+
+        .card:active {
+            transform: scale(0.98);
+        }
+
+        .card.playing {
+            border-color: var(--primary-color);
+            background-color: #eef2ff;
+        }
+
+        .emoji {
+            font-size: 3.5rem;
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        .word {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin: 0;
+            color: var(--text-main);
+        }
+
+        .jyutping {
+            font-family: "Courier New", monospace;
+            color: var(--primary-color);
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin: 5px 0 15px;
+            background: #e0e7ff;
+            padding: 2px 8px;
+            border-radius: 10px;
+        }
+
+        .meaning {
+            font-weight: 600;
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+            color: #374151;
+        }
+
+        .desc {
+            font-size: 0.9rem;
+            color: var(--text-sub);
+            line-height: 1.5;
+        }
+
+        /* Sound Wave Animation */
+        .sound-wave {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            display: flex;
+            gap: 3px;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+
+        .card.playing .sound-wave {
+            opacity: 1;
+        }
+
+        .bar {
+            width: 3px;
+            height: 10px;
+            background-color: var(--primary-color);
+            border-radius: 2px;
+            animation: wave 0.5s infinite ease-in-out;
+        }
+
+        .bar:nth-child(1) { animation-delay: 0.0s; }
+        .bar:nth-child(2) { animation-delay: 0.1s; }
+        .bar:nth-child(3) { animation-delay: 0.2s; }
+
+        @keyframes wave {
+            0%, 100% { height: 10px; }
+            50% { height: 20px; }
+        }
+
+        footer {
+            text-align: center;
+            padding: 40px;
+            color: var(--text-sub);
+            margin-top: 40px;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        .category-title {
+            grid-column: 1 / -1;
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            padding-left: 15px;
+            color: var(--text-main);
+            border-left: 5px solid var(--primary-color);
+            line-height: 1;
+            display: flex;
+            align-items: center;
+        }
+
+        /* Toast Notification */
+        #toast {
+            visibility: hidden;
+            min-width: 250px;
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            border-radius: 50px;
+            padding: 16px;
+            position: fixed;
+            z-index: 1;
+            left: 50%;
+            bottom: 30px;
+            transform: translateX(-50%);
+            font-size: 17px;
+            opacity: 0;
+            transition: opacity 0.3s, bottom 0.3s;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        #toast.show {
+            visibility: visible;
+            opacity: 1;
+            bottom: 50px;
+        }
+
+        @media (max-width: 600px) {
+            h1 { font-size: 2rem; }
+            .grid { grid-template-columns: 1fr; }
+            .category-title { font-size: 1.3rem; margin-top: 20px; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="container">
+            <h1>🧪 粵語聲音實驗室</h1>
+            <p class="subtitle">收錄 40 個最道地、最有趣的粵語詞彙。<br>點擊卡片，讓聲音帶你體驗香港文化！</p>
+            <p class="quote">「語言是打開文化的鑰匙。」</p>
+        </div>
+    </header>
+
+    <main class="container">
+        <div id="card-grid" class="grid">
+            <!-- Cards will be injected here by JavaScript -->
+        </div>
+    </main>
+
+    <footer>
+        <p>Created for fun. 享受學習的過程！</p>
+    </footer>
+
+    <div id="toast">🔊 正在播放聲音...</div>
+
+    <script>
+        // Data Source - 40 Items Total
+        const data = [
+            // 1. 精選入門 (6)
+            { category: "🌟 精選入門", emoji: "🙏", word: "唔該", jyutping: "m4 goi1", meaning: "謝謝 / 麻煩了", desc: "萬能詞！用於請求幫忙或小恩小惠的感謝。" },
+            { category: "🌟 精選入門", emoji: "👌", word: "搞掂", jyutping: "gaau2 dim6", meaning: "完成了", desc: "事情圓滿解決，非常有成就感的一個詞。" },
+            { category: "🌟 精選入門", emoji: "🤔", word: "心大心細", jyutping: "sam1 daai6 sam1 sai3", meaning: "猶豫不決", desc: "形容拿不定主意，心裡七上八下的樣子。" },
+            { category: "🌟 精選入門", emoji: "🐢", word: "慢慢嚟", jyutping: "maan6 maan6 lai4", meaning: "別急 / 慢慢來", desc: "安撫別人的焦慮，或者告訴自己放輕鬆。" },
+            { category: "🌟 精選入門", emoji: "🥰", word: "得意", jyutping: "dak1 ji3", meaning: "可愛 / 有趣", desc: "看到小貓小狗或嬰兒時，忍不住會說這句。" },
+            { category: "🌟 精選入門", emoji: "🤷", word: "是但", jyutping: "si6 daan6", meaning: "隨便", desc: "最佛系的詞，當你不想做決定時的最佳答案。" },
+            
+            // 2. 飲食篇 (5)
+            { category: "🍽️ 飲食文化", emoji: "🍚", word: "食飯", jyutping: "sik6 faan6", meaning: "吃飯", desc: "泛指吃正餐。打工仔最期待的時光。" },
+            { category: "🍽️ 飲食文化", emoji: "🧋", word: "飲茶", jyutping: "jam2 caa4", meaning: "吃點心", desc: "廣東人的週末活動，重點是吃蝦餃燒賣。" },
+            { category: "🍽️ 飲食文化", emoji: "🧾", word: "埋單", jyutping: "maai4 daan1", meaning: "結帳", desc: "吃飽後舉手示意，帥氣地說出這兩個字。" },
+            { category: "🍽️ 飲食文化", emoji: "😋", word: "好味", jyutping: "hou2 mei6", meaning: "好吃", desc: "對廚師或請客的人最好的讚美。" },
+            { category: "🍽️ 飲食文化", emoji: "🥡", word: "外賣", jyutping: "ngoi6 maai6", meaning: "外帶", desc: "不想煮飯時的救星，香港的外賣文化很發達。" },
+
+            // 3. 社交 (5)
+            { category: "👋 社交問候", emoji: "☀️", word: "早晨", jyutping: "zou2 san4", meaning: "早安", desc: "早上見面必說，比 Hello 更親切有活力。" },
+            { category: "👋 社交問候", emoji: "🌙", word: "早抖", jyutping: "zou2 tau2", meaning: "晚安", desc: "祝對方早點休息。「抖」就是休息的意思。" },
+            { category: "👋 社交問候", emoji: "🎁", word: "多謝", jyutping: "do1 ze6", meaning: "謝謝 (厚禮)", desc: "收到禮物或被稱讚時用，比「唔該」更鄭重。" },
+            { category: "👋 社交問候", emoji: "👋", word: "拜拜", jyutping: "baai1 baai3", meaning: "再見", desc: "語調通常比較高，聽起來很輕鬆愉快。" },
+            { category: "👋 社交問候", emoji: "🤣", word: "講笑", jyutping: "gong2 siu3", meaning: "開玩笑", desc: "怕對方當真生氣時，趕緊補上這句。" },
+
+            // 4. 行動 (5)
+            { category: "🚶 日常行動", emoji: "🚌", word: "搭車", jyutping: "daap3 ce1", meaning: "坐車", desc: "各種交通工具通用，搭巴士、搭地鐵都行。" },
+            { category: "🚶 日常行動", emoji: "🛍️", word: "行街", jyutping: "haang4 gaai1", meaning: "逛街", desc: "在街上漫步購物，感受城市脈搏。" },
+            { category: "🚶 日常行動", emoji: "🏠", word: "返屋企", jyutping: "faan1 uk1 kei2", meaning: "回家", desc: "一天中最溫馨的時刻，回到自己的小窩。" },
+            { category: "🚶 日常行動", emoji: "💤", word: "訓覺", jyutping: "fan3 gaau3", meaning: "睡覺", desc: "人生大事。累的時候只想立刻去訓覺。" },
+            { category: "🚶 日常行動", emoji: "🚿", word: "沖涼", jyutping: "cung1 loeng4", meaning: "洗澡", desc: "洗去一身疲憊，讓自己煥然一新。" },
+
+            // 5. 心情 (5)
+            { category: "💬 心情與形容", emoji: "🥵", word: "好熱", jyutping: "hou2 jit6", meaning: "很熱", desc: "夏天必備。記得拉長尾音表達無奈。" },
+            { category: "💬 心情與形容", emoji: "❄️", word: "好凍", jyutping: "hou2 dung3", meaning: "很冷", desc: "冬天時縮著脖子說，比「冷」更具體。" },
+            { category: "💬 心情與形容", emoji: "😫", word: "好攰", jyutping: "hou2 gui6", meaning: "好累", desc: "身體像散架一樣，完全不想動的狀態。" },
+            { category: "💬 心情與形容", emoji: "😡", word: "嬲", jyutping: "nau1", meaning: "生氣", desc: "字形是兩男夾一女，形容生氣的樣子。" },
+            { category: "💬 心情與形容", emoji: "👍", word: "好正", jyutping: "hou2 zeng3", meaning: "超棒 / 極好", desc: "形容食物、體驗或美女帥哥都可以用。" },
+
+            // 6. 職場求生 (5) - NEW
+            { category: "💼 職場求生", emoji: "🐍", word: "蛇王", jyutping: "se4 wong4", meaning: "偷懶", desc: "工作時偷偷溜出去休息，你是「蛇王」嗎？" },
+            { category: "💼 職場求生", emoji: "😫", word: "辛苦晒", jyutping: "san1 fu2 saai3", meaning: "辛苦了", desc: "同事幫忙後，或下班時對大家說的客氣話。" },
+            { category: "💼 職場求生", emoji: "🌙", word: "OT", jyutping: "ou1 ti1", meaning: "加班", desc: "Overtime 的縮寫。香港職場的常見文化。" },
+            { category: "💼 職場求生", emoji: "👋", word: "散水", jyutping: "saan3 seoi2", meaning: "解散 / 離職", desc: "原本指解散，現在多指辭職離開公司。" },
+            { category: "💼 職場求生", emoji: "🤝", word: "開會", jyutping: "hoi1 wui2", meaning: "開會", desc: "上班族最常做的事之一，有時一開就是半天。" },
+
+            // 7. 鬼馬俚語 (4) - NEW
+            { category: "👻 鬼馬俚語", emoji: "🗣️", word: "吹水", jyutping: "ceoi1 seoi2", meaning: "聊天 / 吹牛", desc: "朋友聚在一起天南地北地聊，就是吹水。" },
+            { category: "👻 鬼馬俚語", emoji: "🤿", word: "潛水", jyutping: "cim4 seoi2", meaning: "消失 / 潛水", desc: "在群組裡不說話，或者突然失蹤找不到人。" },
+            { category: "👻 鬼馬俚語", emoji: "🔥", word: "熱氣", jyutping: "jit6 hei3", meaning: "上火", desc: "吃了炸物喉嚨痛？那就是「熱氣」了。" },
+            { category: "👻 鬼馬俚語", emoji: "🍊", word: "運吉", jyutping: "wan6 gat1", meaning: "白忙一場", desc: "以前送桔代表吉利，後來引申為沒幫襯還來搗亂。" },
+
+            // 8. 生活必備 (5) - NEW
+            { category: "🎒 生活必備", emoji: "💳", word: "八達通", jyutping: "baat3 daat6 tung1", meaning: "交通卡", desc: "香港生活的神卡，搭車吃飯購物全靠它。" },
+            { category: "🎒 生活必備", emoji: "📱", word: "手機", jyutping: "sau2 gei1", meaning: "手機", desc: "現代人不可或缺的身體延伸部分。" },
+            { category: "🎒 生活必備", emoji: "☔", word: "雨遮", jyutping: "jyu5 ze1", meaning: "雨傘", desc: "「遮」有遮擋的意思，下雨天必備。" },
+            { category: "🎒 生活必備", emoji: "🚻", word: "廁所", jyutping: "ci3 so2", meaning: "洗手間", desc: "人有三急，這絕對是旅行最需要學會的詞。" },
+            { category: "🎒 生活必備", emoji: "💰", word: "幾錢", jyutping: "gei2 cin2", meaning: "多少錢", desc: "購物必備金句，問價錢時使用。" }
+        ];
+
+        const grid = document.getElementById('card-grid');
+        let currentCategory = "";
+
+        // Render Cards
+        data.forEach(item => {
+            // Add Category Header if needed
+            if (item.category !== currentCategory) {
+                const title = document.createElement('div');
+                title.className = 'category-title';
+                title.textContent = item.category;
+                grid.appendChild(title);
+                currentCategory = item.category;
+            }
+
+            const card = document.createElement('div');
+            card.className = 'card';
+            card.setAttribute('role', 'button');
+            card.setAttribute('aria-label', `播放 ${item.word}`);
+            
+            card.innerHTML = `
+                <div class="sound-wave">
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                </div>
+                <span class="emoji">${item.emoji}</span>
+                <h2 class="word">${item.word}</h2>
+                <div class="jyutping">${item.jyutping}</div>
+                <div class="meaning">${item.meaning}</div>
+                <p class="desc">${item.desc}</p>
+            `;
+
+            card.addEventListener('click', () => {
+                playAudio(item.word, card);
+            });
+
+            grid.appendChild(card);
+        });
+
+        // Audio Functionality
+        function playAudio(text, cardElement) {
+            // Visual Feedback
+            document.querySelectorAll('.card').forEach(c => c.classList.remove('playing'));
+            cardElement.classList.add('playing');
+            
+            // Toast Feedback
+            showToast();
+
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+
+                const utterance = new SpeechSynthesisUtterance(text);
+                const voices = window.speechSynthesis.getVoices();
+                
+                // Try to find a Cantonese voice (zh-HK)
+                // iOS/Mac usually has "Sin-ji", Android might have Google Cantonese
+                const cantoneseVoice = voices.find(voice => 
+                    voice.lang === 'zh-HK' || voice.lang === 'zh-yue'
+                );
+
+                if (cantoneseVoice) {
+                    utterance.voice = cantoneseVoice;
+                } else {
+                    utterance.lang = 'zh-HK'; 
+                }
+                
+                utterance.rate = 0.9; 
+                utterance.pitch = 1.0;
+
+                utterance.onend = () => {
+                    cardElement.classList.remove('playing');
+                };
+
+                window.speechSynthesis.speak(utterance);
+            } else {
+                setTimeout(() => {
+                    cardElement.classList.remove('playing');
+                }, 1000);
+            }
+        }
+
+        function showToast() {
+            const toast = document.getElementById("toast");
+            toast.className = "show";
+            setTimeout(function(){ toast.className = toast.className.replace("show", ""); }, 2000);
+        }
+
+        window.speechSynthesis.onvoiceschanged = () => {
+            window.speechSynthesis.getVoices();
+        };
+
+    </script>
+
+
+</body></html>
